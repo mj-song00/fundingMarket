@@ -20,13 +20,9 @@ public class Timestamped {
     @Column
     private LocalDateTime updatedAt;
 
-    @Column
-    private LocalDateTime deletedAt;
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = null; // 생성 시에는 updatedAt을 null로 유지
-        this.deletedAt = null; // 생성 시 deletedAt도 null로 유지
     }
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.user.enums.UserRole;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -36,6 +37,8 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private UserRole userRole; // 사용자 역할
 
+    @Column
+    private LocalDateTime deletedAt;
 
     public User(
             @NotBlank @Email String email,
@@ -49,4 +52,17 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    // 닉네임 변경
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    // 회원 탈퇴
+    public void updateDeletedAt() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }
