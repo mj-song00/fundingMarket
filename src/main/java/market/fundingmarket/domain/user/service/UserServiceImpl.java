@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
 
-        UserRole userRole = UserRole.User;
+        UserRole userRole = UserRole.USER;
 
         User user = new User(
                 signupRequest.getEmail(),
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
 
-        UserRole userRole = UserRole.Creator;
+        UserRole userRole = UserRole.CREATOR;
 
         User user = new User(
                 signupRequest.getEmail(),
