@@ -1,0 +1,52 @@
+package market.fundingmarket.domain.user.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import market.fundingmarket.common.entity.Timestamped;
+import market.fundingmarket.domain.user.enums.UserRole;
+
+import java.util.UUID;
+
+@Getter
+@Entity
+@Table(name = "Users")
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED) // 외부 직접 호출을 막기 위해 protected 설정
+public class User extends Timestamped {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column
+    private UUID id;
+
+    @Column(nullable = false, unique = true)
+    private String email; // 이메일 (불변 필드로 유지)
+
+    @Column(nullable = false)
+    private String nickName; // 닉네임
+
+    @Column
+    private String password; // 일반 로그인 사용자의 비밀번호 (소셜 로그인 사용자는 null 가능)
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole userRole; // 사용자 역할
+
+
+    public User(
+            @NotBlank @Email String email,
+            @NotBlank String nickName,
+            String encodedPassword,
+            UserRole userRole
+    ){
+        this.email = email;
+        this.nickName = nickName;
+        this.password = encodedPassword;
+        this.userRole = userRole;
+    }
+
+}
