@@ -27,7 +27,6 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
 
-
     public static final String EMAIL_CLAIM = "email";
     public static final String USER_ROLE_CLAIM = "userRole";
     private final SecureDigestAlgorithm<SecretKey, ?> algorithm = Jwts.SIG.HS256;
