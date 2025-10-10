@@ -1,4 +1,4 @@
-package market.fundingmarket.domain.user;
+package market.fundingmarket.domain.user.dto;
 
 import lombok.Getter;
 import market.fundingmarket.domain.user.enums.UserRole;
