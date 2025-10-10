@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserValidation userValidation;
+    private final AuthService authService;
 
     @Transactional
     @Override
@@ -138,6 +139,4 @@ public class UserServiceImpl implements UserService {
         // 로그아웃 처리 (리프레시 토큰 블랙리스트 및 쿠키 삭제)
         authService.logout(refreshToken, response);
     }
-
-
 }
