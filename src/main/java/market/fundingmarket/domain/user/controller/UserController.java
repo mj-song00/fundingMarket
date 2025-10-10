@@ -37,6 +37,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "크리에이터 회원가입", description = "크리에이터 전용 회원가입을 진행합니다.")
+    @PostMapping("/creator/sign-up")
+    public ResponseEntity<ApiResponse<Void>> CreatorSignup(
+            @Valid @RequestBody SignupRequest signupRequest) {
+        userService.createCreator(signupRequest);
+        ApiResponse<Void> response =
+                ApiResponse.successWithOutData(ApiResponseEnum.SIGNUP_SUCCESS);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @Operation(summary = "비밀번호 변경", description = "본인의 비밀번호를 변경합니다.")
     @PatchMapping("/me/password")
     public ResponseEntity<ApiResponse<Void>> changePassword(
