@@ -1,6 +1,6 @@
 package market.fundingmarket.common.config;
 
-import market.fundingmarket.domain.user.AuthUser;
+import market.fundingmarket.domain.user.dto.AuthUser;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.web.method.support.ModelAndViewContainer;
