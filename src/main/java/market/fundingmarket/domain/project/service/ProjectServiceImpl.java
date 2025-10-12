@@ -31,8 +31,8 @@ public class ProjectServiceImpl  implements ProjectService{
 
         Project funding = new Project(
                 registrationRequest.getTitle(),
-                registrationRequest.getContents(),
-                registrationRequest.getImage(),
+                registrationRequest.getContents()  != null ? registrationRequest.getContents() : "",
+                registrationRequest.getImage() != null ? registrationRequest.getImage() : "",
                 registrationRequest.getCategory(),
                 registrationRequest.getFundingAmount(),
                 registrationRequest.getFundingSchedule()

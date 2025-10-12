@@ -51,8 +51,8 @@ public class ProjectServiceImplTest {
         RegistrationRequest request = new RegistrationRequest(
                 "테스트 프로젝트",
                 GAME,
-                "image.jpg",
-                "TECH",
+                "",
+                "",
                 500000L,
                 "2025.01.01 - 2025.03.31"
         );
@@ -68,5 +68,4 @@ public class ProjectServiceImplTest {
         verify(projectRepository, times(1)).save(any(Project.class));
         assertThat(creator.getUserRole()).isEqualTo(UserRole.CREATOR);
     }
-
 }
