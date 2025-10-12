@@ -3,6 +3,7 @@ package market.fundingmarket.domain.project.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import market.fundingmarket.domain.project.enums.Category;
 
 @Getter
 @AllArgsConstructor
@@ -12,7 +13,7 @@ public class RegistrationRequest {
     private String title;
 
     @NotBlank(message = "카테고리를 입력해주세요.")
-    private String category;
+    private Category category;
 
     private String contents;
 

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
+import static market.fundingmarket.domain.project.enums.Category.GAME;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -49,7 +50,7 @@ public class ProjectServiceImplTest {
 
         RegistrationRequest request = new RegistrationRequest(
                 "테스트 프로젝트",
-                "테스트 내용",
+                GAME,
                 "image.jpg",
                 "TECH",
                 500000L,

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
+import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.reward.entity.FundingReward;
 import market.fundingmarket.domain.user.entity.CreatorProfile;
@@ -29,7 +30,7 @@ public class Project extends Timestamped {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private String category;
+    private Category category;
 
     @Column
     private String contents;
@@ -58,7 +59,7 @@ public class Project extends Timestamped {
     public Project(
             @NotBlank  String title,
             String contents, String image,
-            @NotBlank String category,
+            @NotBlank Category category,
             Long fundingAmount,
             String fundingSchedule) {
         this.title = title;
