@@ -19,7 +19,6 @@ import java.util.List;
 @Entity
 @Table(name = "project")
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PROTECTED) // 외부 직접 호출을 막기 위해 protected 설정
 public class Project extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
