@@ -1,7 +1,6 @@
 package market.fundingmarket.domain.project.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +8,8 @@ import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
-import market.fundingmarket.domain.project.reward.entity.FundingReward;
+import market.fundingmarket.domain.project.image.entity.Image;
+import market.fundingmarket.domain.reward.entity.FundingReward;
 import market.fundingmarket.domain.user.entity.CreatorProfile;
 
 import java.util.ArrayList;
@@ -32,11 +32,9 @@ public class Project extends Timestamped {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Lob
     @Column
     private String contents;
-
-    @Column
-    private String images;
 
     @Column(nullable = false)
     private Long fundingAmount; // 펀딩 금액
@@ -52,22 +50,23 @@ public class Project extends Timestamped {
     @JoinColumn(name = "creator_profile_id", nullable = false)
     private CreatorProfile creatorProfile;
 
-
     @OneToMany(mappedBy = "project")
     private List<FundingReward> rewards = new ArrayList<>();
 
-    public Project(
-            @NotBlank  String title,
-            String contents, String image,
-            @NotBlank Category category,
-            Long fundingAmount,
-            String fundingSchedule) {
+    @OneToMany
+    @JoinColumn(name = "project_id")
+    private List<Image> image = new ArrayList<>();
+
+    public Project(String title, Category category,
+                   String contents, Long fundingAmount, String fundingSchedule,
+                   List<FundingReward> rewards, List<Image> image) {
         this.title = title;
-        this.contents = contents;
-        this.images = image;
         this.category = category;
+        this.contents = contents;
         this.fundingAmount = fundingAmount;
         this.fundingSchedule = fundingSchedule;
+        this.rewards = rewards;
+        this.image = image;
     }
 
 

@@ -31,11 +31,12 @@ public class ProjectServiceImpl  implements ProjectService{
 
         Project funding = new Project(
                 registrationRequest.getTitle(),
-                registrationRequest.getContents()  != null ? registrationRequest.getContents() : "",
-                registrationRequest.getImage() != null ? registrationRequest.getImage() : "",
                 registrationRequest.getCategory(),
+                registrationRequest.getContents()  != null ? registrationRequest.getContents() : "",
                 registrationRequest.getFundingAmount(),
-                registrationRequest.getFundingSchedule()
+                registrationRequest.getFundingSchedule(),
+                registrationRequest.getFundingRewards(),
+                registrationRequest.getImages()
         );
 
         user.updateCreator(UserRole.CREATOR);

@@ -1,4 +1,4 @@
-package market.fundingmarket.domain.project.reward.entity;
+package market.fundingmarket.domain.reward.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
