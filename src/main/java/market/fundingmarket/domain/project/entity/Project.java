@@ -1,15 +1,18 @@
 package market.fundingmarket.domain.project.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.project.enums.FundingStatus;
+import market.fundingmarket.domain.project.reward.entity.FundingReward;
 import market.fundingmarket.domain.user.entity.CreatorProfile;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -26,22 +29,19 @@ public class Project extends Timestamped {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private String Category;
+    private String category;
 
-    @Column(nullable = false)
+    @Column
     private String contents;
 
     @Column
     private String images;
 
     @Column(nullable = false)
-    private long fundingAmount; // 펀딩 금액
+    private Long fundingAmount; // 펀딩 금액
 
     @Column(nullable = false)
-    private LocalDateTime fundingPeriod; // 펀딩 기간
-
-    @Column(nullable = false)
-    private long fundingSchedule; // 펀딩 일정
+    private String fundingSchedule; // 펀딩 일정 (2025. 01.01 - 2025 03.31)
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -50,4 +50,27 @@ public class Project extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "creator_profile_id", nullable = false)
     private CreatorProfile creatorProfile;
+
+
+    @OneToMany(mappedBy = "project")
+    private List<FundingReward> rewards = new ArrayList<>();
+
+    public Project(
+            @NotBlank  String title,
+            String contents, String image,
+            @NotBlank String category,
+            Long fundingAmount,
+            String fundingSchedule) {
+        this.title = title;
+        this.contents = contents;
+        this.images = image;
+        this.category = category;
+        this.fundingAmount = fundingAmount;
+        this.fundingSchedule = fundingSchedule;
+    }
+
+
+    public void updateStatus(FundingStatus fundingStatus) {
+        this.status = fundingStatus;
+    }
 }
