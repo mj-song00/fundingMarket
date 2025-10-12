@@ -22,4 +22,9 @@ public class FundingReward extends Timestamped {
 
     @Column
     private String description; // 가격에 포함된 것
+
+    public FundingReward(Long price, String description) {
+        this.price = price;
+        this.description = description;
+    }
 }

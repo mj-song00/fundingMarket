@@ -17,8 +17,7 @@ public class Image extends Timestamped {
     @Column
     private String imageUrl;
 
-    public Image(long id, String imageUrl) {
-        this.id = id;
+    public Image(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 }
