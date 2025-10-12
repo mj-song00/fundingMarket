@@ -3,10 +3,7 @@ package market.fundingmarket.domain.user.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.user.enums.UserRole;
 
@@ -18,6 +15,7 @@ import java.util.UUID;
 @Table(name = "Users")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED) // 외부 직접 호출을 막기 위해 protected 설정
+@Builder
 public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,6 +37,9 @@ public class User extends Timestamped {
 
     @Column
     private LocalDateTime deletedAt;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CreatorProfile creatorProfile;
 
     public User(
             @NotBlank @Email String email,
@@ -64,5 +65,10 @@ public class User extends Timestamped {
     // 회원 탈퇴
     public void updateDeletedAt() {
         this.deletedAt = LocalDateTime.now();
+    }
+
+
+    public void updateCreator(UserRole userRole) {
+        this.userRole = userRole;
     }
 }
