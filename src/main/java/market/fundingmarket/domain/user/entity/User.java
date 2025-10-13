@@ -38,9 +38,6 @@ public class User extends Timestamped {
     @Column
     private LocalDateTime deletedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private CreatorProfile creatorProfile;
-
     public User(
             @NotBlank @Email String email,
             @NotBlank String nickName,

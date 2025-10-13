@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "creator")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED) // 외부 직접 호출을 막기 위해 protected 설정
-public class CreatorProfile extends Timestamped {
+public class Creator extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column
@@ -35,8 +35,5 @@ public class CreatorProfile extends Timestamped {
     @ColumnDefault("true")
     private boolean isActive;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
 }
