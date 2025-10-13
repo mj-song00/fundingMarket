@@ -12,10 +12,8 @@ import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
 import market.fundingmarket.domain.user.dto.AuthUser;
 import market.fundingmarket.domain.user.entity.Creator;
-import market.fundingmarket.domain.user.entity.User;
 import market.fundingmarket.domain.user.enums.UserRole;
 import market.fundingmarket.domain.user.repository.CreatorRepository;
-import market.fundingmarket.domain.user.repository.UserRepository;
 import market.fundingmarket.domain.user.validation.UserValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +25,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProjectServiceImpl  implements ProjectService{
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
     private final UserValidation userValidation;
     private final CreatorRepository creatorRepository;
 
     @Override
     @Transactional
     public void register(RegistrationRequest registrationRequest, AuthUser authUser) {
-        User user = getUser(authUser.getId());
+        Creator user = getUser(authUser.getId());
 
         if (user.getUserRole() != UserRole.CREATOR){
             throw new BaseException(ExceptionEnum.CHECK_USER_ROLE);
@@ -54,9 +51,8 @@ public class ProjectServiceImpl  implements ProjectService{
                 creator
         );
 
-        user.updateCreator(UserRole.CREATOR);
 
-        funding.updateStatus(FundingStatus.InPROGRESS);
+        funding.updateStatus(FundingStatus.IN_PROGRESS);
 
         projectRepository.save(funding);
 
@@ -88,13 +84,13 @@ public class ProjectServiceImpl  implements ProjectService{
     }
 
 
-    private User getUser(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ExceptionEnum.USER_NOT_FOUND));
+    private  Creator getUser(UUID id) {
+        return creatorRepository.findByUserId(id)
+                .orElseThrow(() -> new BaseException(ExceptionEnum.CREATOR_NOT_FOUND));
     }
 
-    private Project validatePortfolio(AuthUser authUser,  Long portfolioId){
-        Project funding = projectRepository.findByProjectId(portfolioId)
+    private Project validatePortfolio(AuthUser authUser,  Long fundingId){
+        Project funding = projectRepository.findByProjectId(fundingId)
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
         if(!funding.getCreator().getId().equals(authUser.getId())){
