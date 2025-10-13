@@ -92,7 +92,7 @@ public class ProjectServiceImpl  implements ProjectService{
 
 
     private  Creator getUser(UUID id) {
-        Creator user = creatorRepository.findByUserId(id)
+        Creator user = creatorRepository.findByCreatorId(id)
                 .orElseThrow(() -> new BaseException(ExceptionEnum.CREATOR_NOT_FOUND));
 
         if (user.getUserRole() != UserRole.CREATOR){
@@ -107,7 +107,7 @@ public class ProjectServiceImpl  implements ProjectService{
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
         if(!funding.getCreator().getId().equals(authUser.getId())){
-            throw new BaseException(ExceptionEnum.USER_NOT_FOUND);
+            throw new BaseException(ExceptionEnum.CREATOR_NOT_FOUND);
         }
 
         if (funding.getDeletedAt()!= null) throw new BaseException(ExceptionEnum.FUNDING_NOT_FOUND);
