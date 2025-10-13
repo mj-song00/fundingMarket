@@ -9,7 +9,8 @@ public enum ApiResponseEnum {
     PROFILE_RETRIEVED_SUCCESS("프로필 조회가 완료되었습니다."),
     NICKNAME_CHANGED_SUCCESS("닉네임 변경이 완료되었습니다."),
     USER_DELETED_SUCCESS("회원 탈퇴가 완료되었습니다."),
-    REGISTRATION_SUCCESS("펀딩 프로젝트가 등록되었습니다.");
+    REGISTRATION_SUCCESS("펀딩 프로젝트가 등록되었습니다."),
+    UPDATE_SUCCESS("수정이 완료되었습니다.");
 
     private final String message;
 
