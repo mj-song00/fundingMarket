@@ -7,9 +7,9 @@ import market.fundingmarket.domain.project.repository.ProjectRepository;
 import market.fundingmarket.domain.project.service.ProjectServiceImpl;
 import market.fundingmarket.domain.reward.entity.FundingReward;
 import market.fundingmarket.domain.user.dto.AuthUser;
-import market.fundingmarket.domain.user.entity.User;
+import market.fundingmarket.domain.user.entity.Creator;
 import market.fundingmarket.domain.user.enums.UserRole;
-import market.fundingmarket.domain.user.repository.UserRepository;
+import market.fundingmarket.domain.user.repository.CreatorRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,10 +29,10 @@ import static org.mockito.Mockito.*;
 public class ProjectServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
+    private ProjectRepository projectRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private CreatorRepository creatorRepository;
 
     @InjectMocks
     private ProjectServiceImpl projectService;
@@ -42,13 +42,20 @@ public class ProjectServiceImplTest {
     @DisplayName("펀딩 프로젝트 등록")
     void registrationFundingProject() {
         //given
-        User creator = User.builder()
+        Creator creator = Creator.builder()
                 .id(UUID.randomUUID())
                 .email("example@test.com")
                 .password("Asdf1234!")
                 .nickName("tester")
-                .userRole(UserRole.USER)
+                .userRole(UserRole.CREATOR)
+                .introduction("테스트 소개")
+                .bankAccount("123-456-789")
+                .isActive(true)
                 .build();
+
+
+        AuthUser authUser = new AuthUser(creator.getId(), creator.getEmail(), creator.getUserRole()
+        );
 
         RegistrationRequest request = new RegistrationRequest(
                 "테스트 프로젝트",
@@ -67,10 +74,10 @@ public class ProjectServiceImplTest {
               )
         );
 
-        AuthUser authUser = new AuthUser(creator.getId(), creator.getEmail(), creator.getUserRole());
 
-        when(userRepository.findById(creator.getId())).thenReturn(Optional.of(creator));
-
+        when(creatorRepository.findById(creator.getId())).thenReturn(Optional.of(creator));
+        when(creatorRepository.findByUserId(creator.getId()))
+                .thenReturn(Optional.of(creator));
         //when
         projectService.register(request, authUser);
 
