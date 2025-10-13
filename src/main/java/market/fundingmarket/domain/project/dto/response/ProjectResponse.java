@@ -14,6 +14,7 @@ import java.util.UUID;
 public class ProjectResponse {
     private final  Long id;
     private final String title;
+    private final String contents;
     private final Category category;
     private final String fundingSchedule;
     private final CreatorInfo creator;
@@ -56,6 +57,7 @@ public class ProjectResponse {
     public ProjectResponse(Project project) {
         this.id = project.getId();
         this.title = project.getTitle();
+        this.contents = project.getContents();
         this.category = project.getCategory();
         this.fundingSchedule = project.getFundingSchedule();
         this.creator = new CreatorInfo(project.getCreator());

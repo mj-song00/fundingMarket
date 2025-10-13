@@ -77,13 +77,16 @@ public class Project extends Timestamped {
     }
 
     public void update(String title, List<Image> image, String contents,
-        Long fundingAmount, String fundingSchedule,   List<FundingReward> reward
+       String fundingSchedule,   List<FundingReward> reward
     ) {
         this.title = title;
         this.image = image;
         this.contents = contents;
-        this.fundingAmount = fundingAmount;
         this.fundingSchedule = fundingSchedule;
         this.rewards = reward;
+    }
+
+    public void updateDelete(){
+        this.deletedAt = LocalDateTime.now();
     }
 }

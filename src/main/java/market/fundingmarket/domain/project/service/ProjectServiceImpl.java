@@ -61,7 +61,6 @@ public class ProjectServiceImpl  implements ProjectService{
         project.update(updateRequest.getTitle(),
                 updateRequest.getImage(),
                 updateRequest.getContents(),
-                updateRequest.getFundingAmount(),
                 updateRequest.getFundingSchedule(),
                 updateRequest.getReward()
                 );
@@ -87,6 +86,7 @@ public class ProjectServiceImpl  implements ProjectService{
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
         funding.updateStatus(FundingStatus.INTERRUPTION);
+        funding.updateDelete();
         projectRepository.save(funding);
     }
 
