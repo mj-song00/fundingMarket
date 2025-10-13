@@ -16,8 +16,6 @@ public class UpdateFundingRequest {
 
     private String contents;
 
-    private Long fundingAmount;
-
     private String fundingSchedule;
 
     private List<FundingReward> reward;
