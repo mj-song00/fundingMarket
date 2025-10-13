@@ -1,11 +1,9 @@
 package market.fundingmarket.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import market.fundingmarket.common.entity.Timestamped;
+import market.fundingmarket.domain.user.enums.UserRole;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
@@ -15,7 +13,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "creator")
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PROTECTED) // 외부 직접 호출을 막기 위해 protected 설정
+@AllArgsConstructor
+@Builder
 public class Creator extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,7 +22,20 @@ public class Creator extends Timestamped {
     private UUID id;
 
     @Column
+    private String email;
+
+    @Column
     private String introduction;
+
+    @Column
+    private String password;
+
+    @Column
+    private String nickName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole userRole;
 
     @Column
     private String bankAccount;
