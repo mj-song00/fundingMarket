@@ -1,8 +1,6 @@
 package market.fundingmarket.domain.project.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
@@ -10,8 +8,9 @@ import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.image.entity.Image;
 import market.fundingmarket.domain.reward.entity.FundingReward;
-import market.fundingmarket.domain.user.entity.CreatorProfile;
+import market.fundingmarket.domain.user.entity.Creator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +44,12 @@ public class Project extends Timestamped {
     @Enumerated(EnumType.STRING)
     private FundingStatus status; // 펀딩 상태 (진행 , 중단 , 완료)
 
+    @Column
+    private LocalDateTime deletedAt;
+
     @ManyToOne
-    @JoinColumn(name = "creator_profile_id", nullable = false)
-    private CreatorProfile creatorProfile;
+    @JoinColumn(name = "creator_id", nullable = false)
+    private Creator creator;
 
     @OneToMany(mappedBy = "project")
     private List<FundingReward> rewards = new ArrayList<>();
@@ -58,7 +60,7 @@ public class Project extends Timestamped {
 
     public Project(String title, Category category,
                    String contents, Long fundingAmount, String fundingSchedule,
-                   List<FundingReward> rewards, List<Image> image) {
+                   List<FundingReward> rewards, List<Image> image, Creator creator) {
         this.title = title;
         this.category = category;
         this.contents = contents;
@@ -66,10 +68,22 @@ public class Project extends Timestamped {
         this.fundingSchedule = fundingSchedule;
         this.rewards = rewards;
         this.image = image;
+        this.creator = creator;
     }
 
 
     public void updateStatus(FundingStatus fundingStatus) {
         this.status = fundingStatus;
+    }
+
+    public void update(String title, List<Image> image, String contents,
+        Long fundingAmount, String fundingSchedule,   List<FundingReward> reward
+    ) {
+        this.title = title;
+        this.image = image;
+        this.contents = contents;
+        this.fundingAmount = fundingAmount;
+        this.fundingSchedule = fundingSchedule;
+        this.rewards = reward;
     }
 }
