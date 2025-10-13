@@ -6,6 +6,7 @@ import market.fundingmarket.common.exception.BaseException;
 import market.fundingmarket.common.exception.ExceptionEnum;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
+import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
@@ -79,7 +80,12 @@ public class ProjectServiceImpl  implements ProjectService{
         projectRepository.save(project);
     }
 
-
+    @Override
+    public ProjectResponse getProject(Long projectId) {
+        Project project = projectRepository.findByProjectId(projectId)
+                .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
+        return new ProjectResponse(project);
+    }
 
 
     private User getUser(UUID id) {
