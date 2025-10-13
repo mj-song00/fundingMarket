@@ -33,13 +33,6 @@ public class ProjectServiceImpl  implements ProjectService{
     public void register(RegistrationRequest registrationRequest, AuthUser authUser) {
         Creator user = getUser(authUser.getId());
 
-        if (user.getUserRole() != UserRole.CREATOR){
-            throw new BaseException(ExceptionEnum.CHECK_USER_ROLE);
-        }
-
-        Creator creator = creatorRepository.findById(user.getId())
-                .orElseThrow(() -> new BaseException(ExceptionEnum.CREATOR_NOT_FOUND));
-
         Project funding = new Project(
                 registrationRequest.getTitle(),
                 registrationRequest.getCategory(),
@@ -48,9 +41,8 @@ public class ProjectServiceImpl  implements ProjectService{
                 registrationRequest.getFundingSchedule(),
                 registrationRequest.getFundingRewards(),
                 registrationRequest.getImages(),
-                creator
+                user
         );
-
 
         funding.updateStatus(FundingStatus.IN_PROGRESS);
 
@@ -59,11 +51,12 @@ public class ProjectServiceImpl  implements ProjectService{
     }
 
     @Override
+    @Transactional
     public void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId) {
         // 인증된 사용자 확인
         userValidation.validateAuthenticatedUser(authUser);
 
-        Project project = validatePortfolio(authUser, fundingId);
+        Project project = validateProject(authUser, fundingId);
 
         project.update(updateRequest.getTitle(),
                 updateRequest.getImage(),
@@ -78,19 +71,39 @@ public class ProjectServiceImpl  implements ProjectService{
 
     @Override
     public ProjectResponse getProject(Long projectId) {
-        Project project = projectRepository.findByProjectId(projectId)
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
         return new ProjectResponse(project);
     }
 
+    @Override
+    @Transactional
+    public void termination(AuthUser authUser, Long fundingId) {
+        getUser(authUser.getId());
+        userValidation.validateAuthenticatedUser(authUser);
+        validateProject(authUser, fundingId);
 
-    private  Creator getUser(UUID id) {
-        return creatorRepository.findByUserId(id)
-                .orElseThrow(() -> new BaseException(ExceptionEnum.CREATOR_NOT_FOUND));
+        Project funding = projectRepository.findById(fundingId)
+                .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
+
+        funding.updateStatus(FundingStatus.INTERRUPTION);
+        projectRepository.save(funding);
     }
 
-    private Project validatePortfolio(AuthUser authUser,  Long fundingId){
-        Project funding = projectRepository.findByProjectId(fundingId)
+
+    private  Creator getUser(UUID id) {
+        Creator user = creatorRepository.findByUserId(id)
+                .orElseThrow(() -> new BaseException(ExceptionEnum.CREATOR_NOT_FOUND));
+
+        if (user.getUserRole() != UserRole.CREATOR){
+            throw new BaseException(ExceptionEnum.CHECK_USER_ROLE);
+        }
+
+        return user;
+    }
+
+    private Project validateProject(AuthUser authUser,  Long fundingId){
+        Project funding = projectRepository.findById(fundingId)
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
         if(!funding.getCreator().getId().equals(authUser.getId())){

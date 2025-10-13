@@ -12,4 +12,6 @@ public interface ProjectService {
     void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId);
 
     ProjectResponse getProject(Long projectId);
+
+    void termination(AuthUser authUser, Long fundingId);
 }

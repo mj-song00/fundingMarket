@@ -59,4 +59,15 @@ public class ProjectController {
 
             return ResponseEntity.ok(ApiResponse.successWithData(result, ApiResponseEnum.GET_SUCCESS));
     }
+
+    @Operation(summary = "프로젝트 종료", description = "프로젝트를 종료합니다. 해당 API는 목표금액 달성 실패, 펀딩이 성공될 경우 사용됩니다.")
+    @PatchMapping("/termination/{fundingId}")
+    public ResponseEntity<ApiResponse<Void>> terminationFunding(
+            @Auth AuthUser authUser,
+            @PathVariable Long fundingId
+    ){
+        projectService.termination(authUser, fundingId);
+        ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.UPDATE_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
