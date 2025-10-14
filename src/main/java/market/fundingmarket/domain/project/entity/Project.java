@@ -45,6 +45,9 @@ public class Project extends Timestamped {
     private FundingStatus status; // 펀딩 상태 (진행 , 중단 , 완료)
 
     @Column
+    private String expectedDeliveryDate; // 배송 예상일
+
+    @Column
     private LocalDateTime deletedAt;
 
     @ManyToOne
@@ -58,14 +61,15 @@ public class Project extends Timestamped {
     @JoinColumn(name = "project_id")
     private List<Image> image = new ArrayList<>();
 
-    public Project(String title, Category category,
-                   String contents, Long fundingAmount, String fundingSchedule,
+    public Project (String title, Category category,
+                   String contents, Long fundingAmount, String fundingSchedule, String expectedDeliveryDate,
                    List<FundingReward> rewards, List<Image> image, Creator creator) {
         this.title = title;
         this.category = category;
         this.contents = contents;
         this.fundingAmount = fundingAmount;
         this.fundingSchedule = fundingSchedule;
+        this.expectedDeliveryDate = expectedDeliveryDate;
         this.rewards = rewards;
         this.image = image;
         this.creator = creator;

@@ -43,12 +43,8 @@ public class ProjectServiceImplTest {
     @InjectMocks
     private ProjectServiceImpl projectService;
 
-    @Mock
-    private UserValidation userValidation;
-
     private Creator creator;
     private AuthUser authUser;
-
 
     @BeforeEach
     public void setUp(){
@@ -89,6 +85,7 @@ public class ProjectServiceImplTest {
                 "",
                 100000L,
                 "2025.01.01 - 2025.03.31",
+                "2025.04.20",
                 List.of(
                         new FundingReward( 10000L, "A 리워드 설명"),
                         new FundingReward(30000L, "B 리워드 설명"),
@@ -134,6 +131,7 @@ public class ProjectServiceImplTest {
                 "원본 내용",
                 100000L,
                 "2025.01.01 - 2025.03.31",
+                "2025.04.20",
                 List.of(new FundingReward(10000L, "리워드")),
                 List.of(new Image("/url/asdf")),
                 creatorEntity
@@ -177,6 +175,7 @@ public class ProjectServiceImplTest {
                 "원본 내용",
                 100000L,
                 "2025.01.01 - 2025.03.31",
+                "2025.04.20",
                 List.of(new FundingReward(10000L, "리워드")),
                 List.of(new Image("/url/asdf")),
                 creator
@@ -219,6 +218,7 @@ public class ProjectServiceImplTest {
                 "원본 내용",
                 100000L,
                 "2025.01.01 - 2025.03.31",
+                "2025.04.20",
                 List.of(new FundingReward(10000L, "리워드")),
                 List.of(new Image("/url/asdf")),
                 creatorEntity

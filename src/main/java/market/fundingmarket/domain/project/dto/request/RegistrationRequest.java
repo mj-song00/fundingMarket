@@ -25,6 +25,8 @@ public class RegistrationRequest {
 
     private String fundingSchedule;
 
+    private String expectedDeliveryDate;
+
     private List<FundingReward> fundingRewards;
 
     private List<Image> images;

@@ -39,6 +39,7 @@ public class ProjectServiceImpl  implements ProjectService{
                 registrationRequest.getContents()  != null ? registrationRequest.getContents() : "",
                 registrationRequest.getFundingAmount(),
                 registrationRequest.getFundingSchedule(),
+                registrationRequest.getExpectedDeliveryDate(),
                 registrationRequest.getFundingRewards(),
                 registrationRequest.getImages(),
                 user
