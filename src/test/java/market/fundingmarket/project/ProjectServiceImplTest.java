@@ -236,6 +236,6 @@ public class ProjectServiceImplTest {
 
         // 상태 검증
         assertThat(savedProject.getStatus()).isEqualTo(FundingStatus.INTERRUPTION);
-        assertThat(savedProject.getDeletedAt()).isNotNull(); // updateDelete()에서 deleteAt 설정했다고 가정
+        assertThat(savedProject.getDeletedAt()).isNotNull();
     }
 }

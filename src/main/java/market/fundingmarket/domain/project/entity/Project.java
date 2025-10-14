@@ -48,10 +48,10 @@ public class Project extends Timestamped {
     private LocalDateTime deletedAt;
 
     @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false)
     private Creator creator;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "project_id")
     private List<FundingReward> rewards = new ArrayList<>();
 
     @OneToMany
