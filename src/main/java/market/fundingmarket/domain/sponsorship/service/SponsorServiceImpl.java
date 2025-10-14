@@ -9,6 +9,7 @@ import market.fundingmarket.domain.project.repository.ProjectRepository;
 import market.fundingmarket.domain.reward.entity.FundingReward;
 import market.fundingmarket.domain.reward.repository.RewardRepository;
 import market.fundingmarket.domain.sponsorship.dto.request.CheckRewardRequest;
+import market.fundingmarket.domain.sponsorship.dto.response.SponsorResponse;
 import market.fundingmarket.domain.sponsorship.entity.Sponsorship;
 import market.fundingmarket.domain.sponsorship.repository.SponsorRepository;
 import market.fundingmarket.domain.user.dto.AuthUser;
@@ -19,6 +20,7 @@ import market.fundingmarket.domain.user.validation.UserValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -51,8 +53,42 @@ public class SponsorServiceImpl implements SponsorService {
                 reward
         );
 
-
         sponsorRepository.save(sponsor);
+    }
+
+    @Override
+    public List<SponsorResponse> getList(AuthUser authUser) {
+        User user = getUser(authUser.getId());
+
+        List<Project> projects = sponsorRepository.findProjectsByUserId(user.getId());
+
+        return projects.stream()
+                .map(project -> new SponsorResponse(
+                        project.getId(),
+                        project.getImage().isEmpty() ? null : project.getImage().get(0),
+                        project.getTitle(),
+                        project.getCreator(),
+                        project.getRewards(),
+                        project.getExpectedDeliveryDate()
+                ))
+                .toList();
+    }
+
+    @Override
+    public void cancel(AuthUser authUser, Long sponsorId) {
+        User user =  getUser(authUser.getId());
+
+        Sponsorship sponsor = sponsorRepository.findById(sponsorId)
+                .orElseThrow(() -> new BaseException(ExceptionEnum.SPONSOR_NOT_FOUND));
+        // 본인 후원인지 확인
+        if (!sponsor.getUser().getId().equals(user.getId())) {
+            throw new BaseException(ExceptionEnum.UNAUTHORIZED_ACTION);
+        }
+
+        sponsor.cancel();
+
+        sponsorRepository.save(sponsor); // 상태 변경 후 저장
+
     }
 
     private User getUser(UUID id) {
