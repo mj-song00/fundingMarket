@@ -21,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     // 일반 로그인
-    @Operation(summary = "로그인", description = "일반 사용자의 로그인을 진행합니다.")
+    @Operation(summary = "로그인", description = "로그인을 진행합니다.")
     @PostMapping("/sign-in")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         // 로그인 후 토큰 발급
