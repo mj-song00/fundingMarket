@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface CreatorRepository extends JpaRepository<Creator, UUID> {
 
-    Optional<Creator> findByCreatorId(UUID id);
+    Optional<Creator> findById(UUID id);
 }
