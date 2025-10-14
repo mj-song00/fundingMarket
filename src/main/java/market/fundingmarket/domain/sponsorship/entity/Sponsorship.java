@@ -28,6 +28,9 @@ public class Sponsorship extends Timestamped {
     @Column
     private int quantity; // 선택한 리워드 갯수
 
+    @Column
+    private boolean cancelled = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 후원자
@@ -49,5 +52,9 @@ public class Sponsorship extends Timestamped {
         this.user = user;
         this.project = project;
         this.reward = reward;
+    }
+
+    public void cancel() {
+        this.cancelled = true;
     }
 }
