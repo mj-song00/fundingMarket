@@ -11,7 +11,8 @@ public enum ApiResponseEnum {
     USER_DELETED_SUCCESS("회원 탈퇴가 완료되었습니다."),
     REGISTRATION_SUCCESS("펀딩 프로젝트가 등록되었습니다."),
     UPDATE_SUCCESS("수정이 완료되었습니다."),
-    GET_SUCCESS("조회 성공");
+    GET_SUCCESS("조회 성공"),
+    SELECT_REWARD_SUCCESS("리워드 선택이 완료되었습니다.");
 
     private final String message;
 

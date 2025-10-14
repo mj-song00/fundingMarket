@@ -26,7 +26,8 @@ public enum ExceptionEnum {
 
     //펀딩 관련
     FUNDING_NOT_FOUND(HttpStatus.BAD_REQUEST,"FUNDING_NOT_FOUND","해당 펀딩 프로젝트를 찾을 수 없습니다."),
-    CREATOR_NOT_FOUND(HttpStatus.BAD_REQUEST,"CREATOR_NOT_FOUND","창작자를 찾을 수 없습니다." );
+    CREATOR_NOT_FOUND(HttpStatus.BAD_REQUEST,"CREATOR_NOT_FOUND","창작자를 찾을 수 없습니다." ),
+    REWARD_NOT_FOUND(HttpStatus.BAD_REQUEST,"REWARD_NOT_FOUND", "리워드를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String errorCode;
