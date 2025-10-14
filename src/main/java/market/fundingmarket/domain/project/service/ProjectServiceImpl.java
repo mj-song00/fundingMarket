@@ -93,7 +93,7 @@ public class ProjectServiceImpl  implements ProjectService{
 
 
     private  Creator getUser(UUID id) {
-        Creator user = creatorRepository.findByCreatorId(id)
+        Creator user = creatorRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ExceptionEnum.CREATOR_NOT_FOUND));
 
         if (user.getUserRole() != UserRole.CREATOR){

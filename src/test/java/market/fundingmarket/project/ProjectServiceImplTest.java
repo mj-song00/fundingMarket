@@ -98,8 +98,8 @@ public class ProjectServiceImplTest {
         );
 
 
-        when(creatorRepository.findByCreatorId(creator.getId())).thenReturn(Optional.of(creatorEntity));
-        when(creatorRepository.findByCreatorId(creator.getId()))
+        when(creatorRepository.findById(creator.getId())).thenReturn(Optional.of(creatorEntity));
+        when(creatorRepository.findById(creator.getId()))
                 .thenReturn(Optional.of(creatorEntity));
 
         //when
@@ -209,7 +209,7 @@ public class ProjectServiceImplTest {
                 .build();
 
         // getUser() 호출 대비 mock
-        when(creatorRepository.findByCreatorId(creator.getId()))
+        when(creatorRepository.findById(creator.getId()))
                 .thenReturn(Optional.of(creatorEntity));
 
         Project existingProject = new Project(
