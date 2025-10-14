@@ -53,12 +53,12 @@ public class Project extends Timestamped {
     @ManyToOne
     private Creator creator;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_id")
     private List<FundingReward> rewards = new ArrayList<>();
 
     @OneToMany
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "image_id")
     private List<Image> image = new ArrayList<>();
 
     public Project (String title, Category category,
