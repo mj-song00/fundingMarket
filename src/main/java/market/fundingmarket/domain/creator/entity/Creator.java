@@ -25,7 +25,7 @@ public class Creator extends Timestamped {
     private String email;
 
     @Column
-    private String introduction;
+    private String introduce;
 
     @Column
     private String password;
@@ -41,6 +41,9 @@ public class Creator extends Timestamped {
     private String bankAccount;
 
     @Column
+    private String bank;
+
+    @Column
     private LocalDateTime deleteAt;
 
     @Column
@@ -54,5 +57,11 @@ public class Creator extends Timestamped {
         this.password = password;
         this.nickName = nickName;
         this.userRole = userRole;
+    }
+
+    public void update(String bank, String bankAccount, String introduce) {
+        this.bank = bank;
+        this.bankAccount = bankAccount;
+        this.introduce = introduce;
     }
 }

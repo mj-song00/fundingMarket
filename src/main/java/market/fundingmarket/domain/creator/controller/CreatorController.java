@@ -5,9 +5,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import market.fundingmarket.common.annotation.Auth;
 import market.fundingmarket.common.response.ApiResponse;
 import market.fundingmarket.common.response.ApiResponseEnum;
+import market.fundingmarket.domain.creator.dto.request.DetailInfoRequset;
 import market.fundingmarket.domain.creator.service.CreatorService;
+import market.fundingmarket.domain.user.dto.AuthUser;
 import market.fundingmarket.domain.user.dto.request.SignupRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +37,15 @@ public class CreatorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    
+    @Operation(summary = "크리에이터 세부정보 등록", description = "크리에이터의 세부 정보를 등록합니다.")
+    @PostMapping("/detail")
+    public ResponseEntity<ApiResponse<Void>> detailInfo(
+            @Auth AuthUser authUser,
+            @RequestBody DetailInfoRequset detailInfoRequset
+            ){
+        creatorService.info(authUser, detailInfoRequset);
+        ApiResponse<Void> response =
+                ApiResponse.successWithOutData(ApiResponseEnum.UPDATE_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
