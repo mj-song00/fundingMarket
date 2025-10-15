@@ -1,4 +1,4 @@
-package market.fundingmarket.domain.user.entity;
+package market.fundingmarket.domain.creator.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,4 +48,11 @@ public class Creator extends Timestamped {
     private boolean isActive;
 
 
+    public Creator(String email, String password,
+                   String nickName, UserRole userRole) {
+        this.email = email;
+        this.password = password;
+        this.nickName = nickName;
+        this.userRole = userRole;
+    }
 }

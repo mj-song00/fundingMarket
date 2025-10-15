@@ -8,7 +8,7 @@ import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.image.entity.Image;
 import market.fundingmarket.domain.reward.entity.FundingReward;
-import market.fundingmarket.domain.user.entity.Creator;
+import market.fundingmarket.domain.creator.entity.Creator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

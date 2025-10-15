@@ -139,32 +139,4 @@ public class UserServiceImpl implements UserService {
         // 로그아웃 처리 (리프레시 토큰 블랙리스트 및 쿠키 삭제)
         authService.logout(refreshToken, response);
     }
-
-    @Override
-    public void createCreator(SignupRequest signupRequest) {
-        Optional<User> userByEmail = userRepository.findByEmail(signupRequest.getEmail());
-        Optional<User> userByNickname = userRepository. findByNickName(signupRequest.getNickName());
-
-        if (userByEmail.isPresent()) {
-            throw new BaseException(ExceptionEnum.USER_ALREADY_EXISTS);
-        }
-
-        if (userByNickname.isPresent()) {
-            throw new BaseException(ExceptionEnum.USER_ALREADY_EXISTS);
-        }
-
-
-        String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
-
-        UserRole userRole = UserRole.CREATOR;
-
-        User user = new User(
-                signupRequest.getEmail(),
-                signupRequest.getNickName(),
-                encodedPassword,
-                userRole
-        );
-
-        userRepository.save(user);
-    }
 }

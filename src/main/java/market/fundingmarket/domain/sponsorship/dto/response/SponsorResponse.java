@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import market.fundingmarket.domain.project.image.entity.Image;
 import market.fundingmarket.domain.reward.entity.FundingReward;
-import market.fundingmarket.domain.user.entity.Creator;
+import market.fundingmarket.domain.creator.entity.Creator;
 
 import java.util.List;
 
