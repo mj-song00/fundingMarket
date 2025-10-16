@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import market.fundingmarket.common.authenticable.Authenticatable;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.user.enums.UserRole;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED) // 외부 직접 호출을 막기 위해 protected 설정
 @Builder
-public class User extends Timestamped {
+public class User extends Timestamped implements Authenticatable  {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column
@@ -64,8 +65,13 @@ public class User extends Timestamped {
         this.deletedAt = LocalDateTime.now();
     }
 
+    @Override
+    public UserRole getRole() {
+        return this.userRole;
+    }
 
-    public void updateCreator(UserRole userRole) {
-        this.userRole = userRole;
+    @Override
+    public LocalDateTime isDeleted() {
+        return this.deletedAt;
     }
 }

@@ -1,10 +1,13 @@
 package market.fundingmarket.domain.creator.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import market.fundingmarket.common.authenticable.Authenticatable;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.user.enums.UserRole;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Creator extends Timestamped {
+public class Creator extends Timestamped  implements Authenticatable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column
@@ -44,11 +47,10 @@ public class Creator extends Timestamped {
     private String bank;
 
     @Column
-    private LocalDateTime deleteAt;
+    private LocalDateTime deletedAt;
 
     @Column
-    @ColumnDefault("true")
-    private boolean isActive;
+    private boolean isActive = true;
 
 
     public Creator(String email, String password,
@@ -63,5 +65,15 @@ public class Creator extends Timestamped {
         this.bank = bank;
         this.bankAccount = bankAccount;
         this.introduce = introduce;
+    }
+
+    @Override
+    public UserRole getRole() {
+        return this.userRole;
+    }
+
+    @Override
+    public LocalDateTime isDeleted() {
+        return this.deletedAt;
     }
 }

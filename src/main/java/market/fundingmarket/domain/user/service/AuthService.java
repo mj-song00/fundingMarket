@@ -2,25 +2,31 @@ package market.fundingmarket.domain.user.service;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import market.fundingmarket.common.authenticable.Authenticatable;
+import market.fundingmarket.common.config.PasswordEncoder;
 import market.fundingmarket.common.exception.BaseException;
 import market.fundingmarket.common.exception.ExceptionEnum;
-import market.fundingmarket.common.config.PasswordEncoder;
 import market.fundingmarket.common.repository.RefreshTokenRepository;
+import market.fundingmarket.domain.creator.entity.Creator;
+import market.fundingmarket.domain.creator.repository.CreatorRepository;
 import market.fundingmarket.domain.user.dto.request.LoginRequest;
 import market.fundingmarket.domain.user.entity.User;
 import market.fundingmarket.domain.user.repository.UserRepository;
 import market.fundingmarket.jwt.JwtUtil;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static market.fundingmarket.common.exception.ExceptionEnum.ALREADY_DELETED;
+import static market.fundingmarket.common.exception.ExceptionEnum.USER_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -31,26 +37,35 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final RedisTemplate<String, Object> redisTemplate;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final CreatorRepository creatorRepository;
+//
+//    public String login(@Valid LoginRequest loginRequest) {
+//        User user = findByEmail(loginRequest.getEmail());
+//        validateUserNotDeleted(user);
+//        authenticateUser(user, loginRequest.getPassword());
+//        return generateAccessToken(user);
+//    }
 
-
-    public String login(@Valid LoginRequest loginRequest) {
-        User user = findByEmail(loginRequest.getEmail());
-        validateUserNotDeleted(user);
-        authenticateUser(user, loginRequest.getPassword());
-        return generateAccessToken(user);
+    public String login(LoginRequest req) { // type = "USER" or "CREATOR"
+        Authenticatable account = findAccountByEmail(req.getEmail() );
+        validateUserNotDeleted(account);
+        authenticateUser(account, req.getPassword());
+        return generateAccessToken(account);
     }
 
-
-    // 이메일로 사용자 조회
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new BaseException(ExceptionEnum.USER_NOT_FOUND));
-    }
 
     // 리프레시 토큰 생성
     public String generateRefreshToken(String email) {
-        User user = findByEmail(email);
-        return jwtUtil.createRefreshToken(user.getId());
+        Authenticatable authUser = findByEmail(email);
+        return jwtUtil.createRefreshToken(authUser.getId());
+    }
+
+    public Authenticatable findByEmail(String email) {
+        // User 먼저 찾고, 없으면 Creator 찾기
+        return userRepository.findByEmail(email)
+                .map(u -> (Authenticatable) u)
+                .or(() -> creatorRepository.findByEmail(email).map(c -> (Authenticatable) c))
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
 
     public void saveRefreshToken(String email, String refreshToken) {
@@ -90,47 +105,6 @@ public class AuthService {
 
     }
 
-    // 사용자 탈퇴 여부 확인
-    private void validateUserNotDeleted(User user) {
-        if (user.getDeletedAt() != null) {
-            throw new BaseException(ExceptionEnum.ALREADY_DELETED);
-        }
-    }
-
-    // 비밀번호 인증
-    private void authenticateUser(User user, String rawPassword) {
-        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new BaseException(ExceptionEnum.EMAIL_PASSWORD_MISMATCH);
-        }
-    }
-
-    // 액세스 토큰 생성
-    private String generateAccessToken(User user) {
-        return jwtUtil.createToken(user.getId(), user.getUserRole());
-    }
-
-    private User validateRefreshToken(String refreshToken) {
-        if (refreshToken == null || refreshTokenRepository.isBlacklisted(refreshToken)
-                || !jwtUtil.isTokenValid(refreshToken)) {
-            throw new BaseException(ExceptionEnum.INVALID_REFRESH_TOKEN);
-        }
-
-        Claims claims = jwtUtil.extractClaims(refreshToken);
-        UUID userId = UUID.fromString(claims.getSubject());
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ExceptionEnum.USER_NOT_FOUND));
-
-        String storedToken = refreshTokenRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new BaseException(ExceptionEnum.INVALID_REFRESH_TOKEN));
-
-        if (!storedToken.equals(refreshToken)) {
-            throw new BaseException(ExceptionEnum.INVALID_REFRESH_TOKEN);
-        }
-
-        return user;
-    }
-
     @Transactional
     public void logout(String refreshToken, HttpServletResponse response) {
         User user = validateRefreshToken(refreshToken);
@@ -150,5 +124,56 @@ public class AuthService {
                 .maxAge(0)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+    }
+
+    // 사용자 탈퇴 여부 확인
+    private void validateUserNotDeleted(Authenticatable authenticatable) {
+        if ( authenticatable.isDeleted() != null) {
+            throw new BaseException(ALREADY_DELETED);
+        }
+    }
+
+    // 비밀번호 인증
+    private void authenticateUser(Authenticatable authenticatable, String rawPassword) {
+        if (!passwordEncoder.matches(rawPassword, authenticatable.getPassword())) {
+            throw new BaseException(ExceptionEnum.EMAIL_PASSWORD_MISMATCH);
+        }
+    }
+
+    // 액세스 토큰 생성
+    private String generateAccessToken(Authenticatable authenticatable) {
+        return jwtUtil.createToken(authenticatable.getId(), authenticatable.getRole());
+    }
+
+    private User validateRefreshToken(String refreshToken) {
+        if (refreshToken == null || refreshTokenRepository.isBlacklisted(refreshToken)
+                || !jwtUtil.isTokenValid(refreshToken)) {
+            throw new BaseException(ExceptionEnum.INVALID_REFRESH_TOKEN);
+        }
+
+        Claims claims = jwtUtil.extractClaims(refreshToken);
+        UUID userId = UUID.fromString(claims.getSubject());
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
+        String storedToken = refreshTokenRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new BaseException(ExceptionEnum.INVALID_REFRESH_TOKEN));
+
+        if (!storedToken.equals(refreshToken)) {
+            throw new BaseException(ExceptionEnum.INVALID_REFRESH_TOKEN);
+        }
+
+        return user;
+    }
+
+    private Authenticatable findAccountByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) return user.get();
+
+        Optional<Creator> creator = creatorRepository.findByEmail(email);
+        if (creator.isPresent()) return creator.get();
+
+        throw new BaseException(USER_NOT_FOUND);
     }
 }
