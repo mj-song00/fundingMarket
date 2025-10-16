@@ -54,7 +54,7 @@ public class ProjectServiceImplTest {
             .password("Asdf1234!")
             .nickName("tester")
             .userRole(UserRole.CREATOR)
-            .introduction("테스트 소개")
+            .introduce("테스트 소개")
             .bankAccount("123-456-789")
             .isActive(true)
             .build();
@@ -72,7 +72,7 @@ public class ProjectServiceImplTest {
                 .password(creator.getPassword())
                 .nickName(creator.getNickName())
                 .userRole(creator.getUserRole())
-                .introduction(creator.getIntroduction())
+                .introduce(creator.getIntroduce())
                 .bankAccount(creator.getBankAccount())
                 .isActive(true)
                 .build();
@@ -119,7 +119,7 @@ public class ProjectServiceImplTest {
                 .password(creator.getPassword())
                 .nickName(creator.getNickName())
                 .userRole(creator.getUserRole())
-                .introduction(creator.getIntroduction())
+                .introduce(creator.getIntroduce())
                 .bankAccount(creator.getBankAccount())
                 .isActive(true)
                 .build();
@@ -202,7 +202,7 @@ public class ProjectServiceImplTest {
                 .password(creator.getPassword())
                 .nickName(creator.getNickName())
                 .userRole(creator.getUserRole())
-                .introduction(creator.getIntroduction())
+                .introduce(creator.getIntroduce())
                 .bankAccount(creator.getBankAccount())
                 .isActive(true)
                 .build();

@@ -24,11 +24,9 @@ public class ProjectResponse {
     @Getter
     public static class CreatorInfo{
         private final UUID id;
-        private final String introduction;
 
         public CreatorInfo(Creator creator) {
             this.id = creator.getId();
-            this.introduction = creator.getIntroduction();
         }
     }
 
