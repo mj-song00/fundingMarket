@@ -44,8 +44,8 @@ public class CreatorServiceImpl implements CreatorService {
 
         Creator creator = new Creator(
                 signupRequest.getEmail(),
-                signupRequest.getNickName(),
                 encodedPassword,
+                signupRequest.getNickName(),
                 userRole
         );
 
