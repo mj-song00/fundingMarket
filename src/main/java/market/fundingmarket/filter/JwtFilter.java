@@ -61,10 +61,11 @@ public class JwtFilter  implements Filter {
         }
 
         /**
-         * 회원가입, 로그인, 코인 시세 api는 jwt 토큰 불필요
+         * 회원가입, 로그인 api는 jwt 토큰 불필요
          */
         if (url.startsWith("/api/v1/users/auth/sign-up") || url.startsWith("/api/v1/users/auth/sign-in")
-                || (url.startsWith("/swagger-ui") || url.startsWith("/v3/api-docs"))
+                || (url.startsWith("/swagger-ui") || url.startsWith("/v3/api-docs")
+                || (url.startsWith("/api/v1/creator/sign-up"))    )
         ) {
             chain.doFilter(request, response);
             return;
