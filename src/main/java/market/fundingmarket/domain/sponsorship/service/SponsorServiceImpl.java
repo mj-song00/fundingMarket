@@ -65,10 +65,10 @@ public class SponsorServiceImpl implements SponsorService {
         return projects.stream()
                 .map(project -> new SponsorResponse(
                         project.getId(),
-                        project.getImage().isEmpty() ? null : project.getImage().get(0),
+                      //  project.getImage().isEmpty() ? null : project.getImage().get(0),
                         project.getTitle(),
                         project.getCreator(),
-                        project.getRewards(),
+                       // project.getRewards(),
                         project.getExpectedDeliveryDate()
                 ))
                 .toList();

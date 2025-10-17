@@ -14,8 +14,12 @@ import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.service.ProjectService;
 import market.fundingmarket.domain.user.dto.AuthUser;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Tag(name = "Project", description = "project 관련 API")
 @RestController
@@ -26,12 +30,16 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @Operation(summary = "프로젝트 등록", description = "펀딩 프로젝트를 등록합니다. 창작자만 등록이 가능합니다.")
-    @PostMapping("/register")
+    @PostMapping(value = "/register",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<Void>> register(
-            @Valid @RequestBody RegistrationRequest registrationRequest,
-            @Auth AuthUser authUser
+            @Valid @RequestPart  RegistrationRequest registrationRequest,
+            @Auth AuthUser authUser,
+            @RequestPart("images") List<MultipartFile> images
             ){
-        projectService.register(registrationRequest, authUser);
+
+        projectService.register(registrationRequest, authUser, images);
 
         ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.REGISTRATION_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(response);

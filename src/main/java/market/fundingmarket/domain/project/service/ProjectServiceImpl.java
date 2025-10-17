@@ -4,20 +4,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import market.fundingmarket.common.exception.BaseException;
 import market.fundingmarket.common.exception.ExceptionEnum;
+import market.fundingmarket.domain.creator.entity.Creator;
+import market.fundingmarket.domain.creator.repository.CreatorRepository;
+import market.fundingmarket.domain.file.service.FileServie;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
 import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
+import market.fundingmarket.domain.reward.entity.FundingReward;
 import market.fundingmarket.domain.user.dto.AuthUser;
-import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.user.enums.UserRole;
-import market.fundingmarket.domain.creator.repository.CreatorRepository;
 import market.fundingmarket.domain.user.validation.UserValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,11 +31,17 @@ public class ProjectServiceImpl  implements ProjectService{
     private final ProjectRepository projectRepository;
     private final UserValidation userValidation;
     private final CreatorRepository creatorRepository;
+    private final FileServie fileService;
+
 
     @Override
     @Transactional
-    public void register(RegistrationRequest registrationRequest, AuthUser authUser) {
+    public void register(RegistrationRequest registrationRequest, AuthUser authUser,  List<MultipartFile> images) {
         Creator user = getUser(authUser.getId());
+
+        List<FundingReward> rewards = registrationRequest.getFundingRewards().stream()
+                .map(r -> new FundingReward(r.getPrice(), r.getDescription()))
+                .toList();
 
         Project funding = new Project(
                 registrationRequest.getTitle(),
@@ -40,8 +50,7 @@ public class ProjectServiceImpl  implements ProjectService{
                 registrationRequest.getFundingAmount(),
                 registrationRequest.getFundingSchedule(),
                 registrationRequest.getExpectedDeliveryDate(),
-                registrationRequest.getFundingRewards(),
-                registrationRequest.getImages(),
+                rewards,
                 user
         );
 
@@ -49,6 +58,7 @@ public class ProjectServiceImpl  implements ProjectService{
 
         projectRepository.save(funding);
 
+        fileService.saveFile(images, authUser, funding.getId());
     }
 
     @Override
@@ -60,7 +70,7 @@ public class ProjectServiceImpl  implements ProjectService{
         Project project = validateProject(authUser, fundingId);
 
         project.update(updateRequest.getTitle(),
-                updateRequest.getImage(),
+//                updateRequest.getImage(),
                 updateRequest.getContents(),
                 updateRequest.getFundingSchedule(),
                 updateRequest.getReward()

@@ -1,13 +1,12 @@
 package market.fundingmarket.domain.project.dto.response;
 
 import lombok.Getter;
+import market.fundingmarket.domain.creator.entity.Creator;
+import market.fundingmarket.domain.file.entity.File;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.enums.Category;
-import market.fundingmarket.domain.project.image.entity.Image;
 import market.fundingmarket.domain.reward.entity.FundingReward;
-import market.fundingmarket.domain.creator.entity.Creator;
 
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,8 +17,8 @@ public class ProjectResponse {
     private final Category category;
     private final String fundingSchedule;
     private final CreatorInfo creator;
-    private final List<RewardInfo> rewards;
-    private final List<ImageInfo> images;
+//    private final List<RewardInfo> rewards;
+//    private final List<ImageInfo> images;
 
     @Getter
     public static class CreatorInfo{
@@ -44,10 +43,10 @@ public class ProjectResponse {
     }
 
     @Getter
-    public static class ImageInfo {
+    public static class FileInfo {
         private final String url;
 
-        public ImageInfo(Image image) {
+        public FileInfo(File image) {
             this.url = image.getImageUrl();
         }
     }
@@ -59,11 +58,11 @@ public class ProjectResponse {
         this.category = project.getCategory();
         this.fundingSchedule = project.getFundingSchedule();
         this.creator = new CreatorInfo(project.getCreator());
-        this.rewards = project.getRewards().stream()
-                .map(RewardInfo::new)
-                .toList();
-        this.images = project.getImage().stream()
-                .map(ImageInfo::new)
-                .toList();
+//        this.rewards = project.getRewards().stream()
+//                .map(RewardInfo::new)
+//                .toList();
+//        this.images = project.getImage().stream()
+//                .map(ImageInfo::new)
+//                .toList();
     }
 }

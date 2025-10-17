@@ -31,7 +31,9 @@ public enum ExceptionEnum {
 
     SPONSOR_NOT_FOUND(HttpStatus.BAD_REQUEST,"SPONSOR_NOT_FOUND", "후원 내역이 없습니다." ),
     UNAUTHORIZED_ACTION(HttpStatus.BAD_REQUEST,"UNAUTHORIZED_ACTION", "본인의 후원만 취소할 수 있습니다." ),
-    TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST,"TYPE_NOT_FOUND","타입이 올바르지 않습니다." );
+    TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST,"TYPE_NOT_FOUND","타입이 올바르지 않습니다." ),
+
+    UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "UPLOAD_FAILED","파일 업로드에 실패하였습니다." );
 
     private final HttpStatus status;
     private final String errorCode;

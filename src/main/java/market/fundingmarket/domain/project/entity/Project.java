@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
-import market.fundingmarket.domain.project.image.entity.Image;
 import market.fundingmarket.domain.reward.entity.FundingReward;
 import market.fundingmarket.domain.creator.entity.Creator;
 
@@ -57,13 +56,9 @@ public class Project extends Timestamped {
     @JoinColumn(name = "project_id")
     private List<FundingReward> rewards = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "image_id")
-    private List<Image> image = new ArrayList<>();
-
     public Project (String title, Category category,
                    String contents, Long fundingAmount, String fundingSchedule, String expectedDeliveryDate,
-                   List<FundingReward> rewards, List<Image> image, Creator creator) {
+                   List<FundingReward> rewards, Creator creator) {
         this.title = title;
         this.category = category;
         this.contents = contents;
@@ -71,7 +66,6 @@ public class Project extends Timestamped {
         this.fundingSchedule = fundingSchedule;
         this.expectedDeliveryDate = expectedDeliveryDate;
         this.rewards = rewards;
-        this.image = image;
         this.creator = creator;
     }
 
@@ -80,11 +74,10 @@ public class Project extends Timestamped {
         this.status = fundingStatus;
     }
 
-    public void update(String title, List<Image> image, String contents,
+    public void update(String title,  String contents,
        String fundingSchedule,   List<FundingReward> reward
     ) {
         this.title = title;
-        this.image = image;
         this.contents = contents;
         this.fundingSchedule = fundingSchedule;
         this.rewards = reward;
