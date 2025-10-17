@@ -55,8 +55,8 @@ public class SwaggerConfig {
                                 - 리프레시 토큰 관련 기능은 쿠키 기반이므로 스웨거에서 직접 테스트할 수 없습니다.
                                 """)
                         .contact(new Contact()
-                                .name("Team Github Repository")
-                                .url("https://github.com/LJH4987/gathering_project")
+                                .name("Funding Market Repository")
+                                .url("https://github.com/mj-song00/fundingMarket.git ")
                         )
                 )
                 .addSecurityItem(securityRequirement)
