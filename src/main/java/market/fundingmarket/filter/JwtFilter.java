@@ -62,10 +62,12 @@ public class JwtFilter  implements Filter {
 
         /**
          * 회원가입, 로그인 api는 jwt 토큰 불필요
+         * 페이지 상세조회 jwt 불필요
+         * todo 카테고리, 제목 검색 포함
          */
         if (url.startsWith("/api/v1/users/auth/sign-up") || url.startsWith("/api/v1/users/auth/sign-in")
                 || (url.startsWith("/swagger-ui") || url.startsWith("/v3/api-docs")
-                || (url.startsWith("/api/v1/creator/sign-up"))    )
+                || (url.startsWith("/api/v1/creator/sign-up")) || url.startsWith("/api/v1/project/"))
         ) {
             chain.doFilter(request, response);
             return;
