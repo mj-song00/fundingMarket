@@ -52,20 +52,20 @@ public class Project extends Timestamped {
     @ManyToOne
     private Creator creator;
 
-    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "project_id")
-    private List<FundingReward> rewards = new ArrayList<>();
+//    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "project_id")
+//    private List<FundingReward> rewards = new ArrayList<>();
 
     public Project (String title, Category category,
                    String contents, Long fundingAmount, String fundingSchedule, String expectedDeliveryDate,
-                   List<FundingReward> rewards, Creator creator) {
+                    Creator creator) {
         this.title = title;
         this.category = category;
         this.contents = contents;
         this.fundingAmount = fundingAmount;
         this.fundingSchedule = fundingSchedule;
         this.expectedDeliveryDate = expectedDeliveryDate;
-        this.rewards = rewards;
+//        this.rewards = rewards;
         this.creator = creator;
     }
 
@@ -80,7 +80,7 @@ public class Project extends Timestamped {
         this.title = title;
         this.contents = contents;
         this.fundingSchedule = fundingSchedule;
-        this.rewards = reward;
+//        this.rewards = reward;
     }
 
     public void updateDelete(){

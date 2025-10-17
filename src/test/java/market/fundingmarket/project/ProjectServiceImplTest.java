@@ -1,17 +1,16 @@
 package market.fundingmarket.project;
 
+import market.fundingmarket.domain.creator.entity.Creator;
+import market.fundingmarket.domain.creator.repository.CreatorRepository;
 import market.fundingmarket.domain.file.entity.File;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.enums.FundingStatus;
-import market.fundingmarket.domain.file.entity.Image;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
 import market.fundingmarket.domain.project.service.ProjectServiceImpl;
 import market.fundingmarket.domain.reward.entity.FundingReward;
 import market.fundingmarket.domain.user.dto.AuthUser;
-import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.user.enums.UserRole;
-import market.fundingmarket.domain.creator.repository.CreatorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,8 @@ import java.util.UUID;
 
 import static market.fundingmarket.domain.project.enums.Category.GAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ProjectServiceImplTest {
@@ -130,7 +130,7 @@ public class ProjectServiceImplTest {
                 100000L,
                 "2025.01.01 - 2025.03.31",
                 "2025.04.20",
-                List.of(new FundingReward(10000L, "리워드")),
+            //    List.of(new FundingReward(10000L, "리워드")),
                 creatorEntity
         );
 
@@ -215,7 +215,7 @@ public class ProjectServiceImplTest {
                 100000L,
                 "2025.01.01 - 2025.03.31",
                 "2025.04.20",
-                List.of(new FundingReward(10000L, "리워드")),
+         //       List.of(new FundingReward(10000L, "리워드")),
                 creatorEntity
         );
 

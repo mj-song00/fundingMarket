@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
+import market.fundingmarket.domain.project.entity.Project;
 
 @Getter
 @Entity
@@ -23,8 +24,13 @@ public class FundingReward extends Timestamped {
     @Column
     private String description; // 가격에 포함된 것
 
-    public FundingReward(Long price, String description) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    public FundingReward(Long price, String description, Project project) {
         this.price = price;
         this.description = description;
+        this.project = project;
     }
 }
