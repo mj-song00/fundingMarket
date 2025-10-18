@@ -53,7 +53,6 @@ public class ProjectServiceImpl  implements ProjectService{
                 registrationRequest.getFundingAmount(),
                 registrationRequest.getFundingSchedule(),
                 registrationRequest.getExpectedDeliveryDate(),
-              //  rewards,
                 user
         );
 
@@ -72,7 +71,8 @@ public class ProjectServiceImpl  implements ProjectService{
 
     @Override
     @Transactional
-    public void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId) {
+    public void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId,
+                       List<MultipartFile> images) {
         // 인증된 사용자 확인
         userValidation.validateAuthenticatedUser(authUser);
 
@@ -80,11 +80,18 @@ public class ProjectServiceImpl  implements ProjectService{
 
         project.update(updateRequest.getTitle(),
                 updateRequest.getContents(),
-                updateRequest.getFundingSchedule(),
-                updateRequest.getReward()
+                updateRequest.getFundingSchedule()
                 );
 
         projectRepository.save(project);
+
+        List<FundingReward> rewards = updateRequest.getReward().stream()
+                .map(r -> new FundingReward(r.getPrice(), r.getDescription(), project))
+                .toList();
+
+        rewardRepository.saveAll(rewards);
+
+        fileService.saveFile(images, authUser, project.getId());
     }
 
     @Override

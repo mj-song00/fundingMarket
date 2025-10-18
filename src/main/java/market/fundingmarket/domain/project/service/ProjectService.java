@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProjectService {
     void register(@Valid RegistrationRequest registrationRequest, AuthUser authUser,  List<MultipartFile> images);
 
-    void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId);
+    void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId, List<MultipartFile> images);
 
     ProjectResponse getProject(Long projectId);
 

@@ -75,12 +75,11 @@ public class Project extends Timestamped {
     }
 
     public void update(String title,  String contents,
-       String fundingSchedule,   List<FundingReward> reward
+       String fundingSchedule
     ) {
         this.title = title;
         this.contents = contents;
         this.fundingSchedule = fundingSchedule;
-//        this.rewards = reward;
     }
 
     public void updateDelete(){

@@ -46,13 +46,16 @@ public class ProjectController {
     }
 
     @Operation(summary = "프로젝트 수정", description = "펀딩 프로젝트를 수정합니다.")
-    @PutMapping("/edit/{fundingId}")
+    @PutMapping(value = "/edit/{fundingId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<Void>> updateFunding(
             @Auth AuthUser authUser,
             @RequestBody UpdateFundingRequest updateRequest,
-            @PathVariable Long fundingId
+            @PathVariable Long fundingId,
+            @RequestPart("images") List<MultipartFile> images
     ){
-        projectService.update(authUser, updateRequest, fundingId);
+        projectService.update(authUser, updateRequest, fundingId, images);
         ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.UPDATE_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
