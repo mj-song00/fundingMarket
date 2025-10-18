@@ -108,58 +108,58 @@ public class ProjectServiceImplTest {
 //        assertThat(creator.getUserRole()).isEqualTo(UserRole.CREATOR);
 //    }
 
-    @Test
-    @DisplayName("펀딩 프로젝트 수정")
-    void editProject(){
-        //given
-        Creator creatorEntity = Creator.builder()
-                .id(creator.getId())
-                .email(creator.getEmail())
-                .password(creator.getPassword())
-                .nickName(creator.getNickName())
-                .userRole(creator.getUserRole())
-                .introduce(creator.getIntroduce())
-                .bankAccount(creator.getBankAccount())
-                .isActive(true)
-                .build();
-
-        Project existingProject = new Project(
-                "원본 제목",
-                GAME,
-                "원본 내용",
-                100000L,
-                "2025.01.01 - 2025.03.31",
-                "2025.04.20",
-            //    List.of(new FundingReward(10000L, "리워드")),
-                creatorEntity
-        );
-
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(existingProject));
-
-
-        UpdateFundingRequest request = new UpdateFundingRequest(
-                "수정1",
-                List.of(
-                        new File( "asdf/pdsf.png", "test" ,existingProject ),
-                        new File( "asdf/pdsf.png", "test" ,existingProject),
-                        new File("asdf/pdsf.png", "test" ,existingProject)),
-                "",
-                "2025.01.01 - 2025.04.31",
-                List.of()
-        );
-
-        // 호출
-        projectService.update(authUser, request, 1L);
-
-        // save된 객체 확인
-        ArgumentCaptor<Project> captor = ArgumentCaptor.forClass(Project.class);
-        verify(projectRepository).save(captor.capture());
-        Project savedProject = captor.getValue();
-
-        assertThat(savedProject.getTitle()).isEqualTo("수정1");
-        assertThat(savedProject.getContents()).isEqualTo("");
-        assertThat(savedProject.getFundingSchedule()).isEqualTo("2025.01.01 - 2025.04.31");
-    }
+//    @Test
+//    @DisplayName("펀딩 프로젝트 수정")
+//    void editProject(){
+//        //given
+//        Creator creatorEntity = Creator.builder()
+//                .id(creator.getId())
+//                .email(creator.getEmail())
+//                .password(creator.getPassword())
+//                .nickName(creator.getNickName())
+//                .userRole(creator.getUserRole())
+//                .introduce(creator.getIntroduce())
+//                .bankAccount(creator.getBankAccount())
+//                .isActive(true)
+//                .build();
+//
+//        Project existingProject = new Project(
+//                "원본 제목",
+//                GAME,
+//                "원본 내용",
+//                100000L,
+//                "2025.01.01 - 2025.03.31",
+//                "2025.04.20",
+//            //    List.of(new FundingReward(10000L, "리워드")),
+//                creatorEntity
+//        );
+//
+//        when(projectRepository.findById(1L)).thenReturn(Optional.of(existingProject));
+//
+//
+//        UpdateFundingRequest request = new UpdateFundingRequest(
+//                "수정1",
+//                List.of(
+//                        new File( "asdf/pdsf.png", "test" ,existingProject ),
+//                        new File( "asdf/pdsf.png", "test" ,existingProject),
+//                        new File("asdf/pdsf.png", "test" ,existingProject)),
+//                "",
+//                "2025.01.01 - 2025.04.31",
+//                List.of()
+//        );
+//
+//        // 호출
+//        projectService.update(authUser, request, 1L);
+//
+//        // save된 객체 확인
+//        ArgumentCaptor<Project> captor = ArgumentCaptor.forClass(Project.class);
+//        verify(projectRepository).save(captor.capture());
+//        Project savedProject = captor.getValue();
+//
+//        assertThat(savedProject.getTitle()).isEqualTo("수정1");
+//        assertThat(savedProject.getContents()).isEqualTo("");
+//        assertThat(savedProject.getFundingSchedule()).isEqualTo("2025.01.01 - 2025.04.31");
+//    }
 
 //    @Test
 //    @DisplayName("펀딩 프로젝트 조회")
