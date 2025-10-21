@@ -38,13 +38,6 @@ public class AuthService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final RefreshTokenRepository refreshTokenRepository;
     private final CreatorRepository creatorRepository;
-//
-//    public String login(@Valid LoginRequest loginRequest) {
-//        User user = findByEmail(loginRequest.getEmail());
-//        validateUserNotDeleted(user);
-//        authenticateUser(user, loginRequest.getPassword());
-//        return generateAccessToken(user);
-//    }
 
     public String login(LoginRequest req) { // type = "USER" or "CREATOR"
         Authenticatable account = findAccountByEmail(req.getEmail() );
