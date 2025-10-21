@@ -67,7 +67,7 @@ public class JwtFilter  implements Filter {
          */
         if (url.startsWith("/api/v1/users/auth/sign-up") || url.startsWith("/api/v1/users/auth/sign-in")
                 || (url.startsWith("/swagger-ui") || url.startsWith("/v3/api-docs")
-                || (url.startsWith("/api/v1/creator/sign-up")) || url.startsWith("/api/v1/project/"))
+                || (url.startsWith("/api/v1/creator/sign-up")) || url.matches("^/api/v1/project/\\d+$")  )
         ) {
             chain.doFilter(request, response);
             return;
@@ -111,8 +111,6 @@ public class JwtFilter  implements Filter {
                 httpRequest.setAttribute("id", UUID.fromString(claims.getSubject()));
                 httpRequest.setAttribute("username", (claims.get("username", String.class)));
                 httpRequest.setAttribute("role", claims.get("role", String.class));
-//                httpRequest.setAttribute("isActive", claims.get("isActive",Boolean.class));
-//                httpRequest.setAttribute("isSecession", claims.get("isSecession", Boolean.class));
 
                 chain.doFilter(request, response);
             } else {
