@@ -36,10 +36,11 @@ public class ProjectController {
     public ResponseEntity<ApiResponse<Void>> register(
             @Valid @RequestPart  RegistrationRequest registrationRequest,
             @Auth AuthUser authUser,
-            @RequestPart("images") List<MultipartFile> images
+            @RequestPart("images") List<MultipartFile> images,
+            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
             ){
 
-        projectService.register(registrationRequest, authUser, images);
+        projectService.register(registrationRequest, authUser, images, thumbnail);
 
         ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.REGISTRATION_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -51,11 +52,12 @@ public class ProjectController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<Void>> updateFunding(
             @Auth AuthUser authUser,
-            @RequestBody UpdateFundingRequest updateRequest,
+            @RequestPart UpdateFundingRequest updateRequest,
             @PathVariable Long fundingId,
-            @RequestPart("images") List<MultipartFile> images
+            @RequestPart("images") List<MultipartFile> images,
+            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
     ){
-        projectService.update(authUser, updateRequest, fundingId, images);
+        projectService.update(authUser, updateRequest, fundingId, images, thumbnail);
         ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.UPDATE_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

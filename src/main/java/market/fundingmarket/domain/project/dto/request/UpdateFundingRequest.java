@@ -2,23 +2,15 @@ package market.fundingmarket.domain.project.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import market.fundingmarket.domain.file.entity.File;
-import market.fundingmarket.domain.reward.entity.FundingReward;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public class UpdateFundingRequest {
-    private String title;
+    private String title; // 제목
 
-    private String contents;
+    private String content; // 본문 글
 
-    private String fundingSchedule;
-
-    private List<FundingReward> reward;
-
-    private List<MultipartFile>  file;
-
+    private List<Long> deleteImageIds; // 삭제할 기존 이미지 ID
 }

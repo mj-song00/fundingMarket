@@ -3,9 +3,8 @@ package market.fundingmarket.domain.project.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import market.fundingmarket.domain.file.entity.File;
 import market.fundingmarket.domain.project.enums.Category;
-import market.fundingmarket.domain.reward.entity.FundingReward;
+import market.fundingmarket.domain.reward.dto.request.RewardRegistRequest;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ public class RegistrationRequest {
 
     private String expectedDeliveryDate;
 
-    private List<FundingReward> fundingRewards;
+    private List<RewardRegistRequest> fundingRewards;
 
-    private List<File> images;
 }

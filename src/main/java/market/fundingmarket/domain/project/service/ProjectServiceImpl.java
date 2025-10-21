@@ -24,6 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +48,7 @@ public class ProjectServiceImpl  implements ProjectService{
     @Override
     @Transactional
     public void register(RegistrationRequest registrationRequest, AuthUser authUser,
-                         List<MultipartFile> images) {
+                         List<MultipartFile> images, MultipartFile thumbnail) {
         Creator user = getUser(authUser.getId());
 
 
@@ -66,32 +72,53 @@ public class ProjectServiceImpl  implements ProjectService{
 
         rewardRepository.saveAll(rewards);
 
-        fileService.saveFile(images, authUser, funding.getId());
+        fileService.updateThumbnail(thumbnail, funding );
+        fileService.saveFile(images, authUser, funding );
     }
 
     @Override
     @Transactional
-    public void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId,
-                       List<MultipartFile> images) {
-        // 인증된 사용자 확인
-        userValidation.validateAuthenticatedUser(authUser);
+    public void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long projectId,
+                       List<MultipartFile> images, MultipartFile thumbnail) {
 
-        Project project = validateProject(authUser, fundingId);
+        // 유저 확인
+        getUser(authUser.getId());
 
-        project.update(updateRequest.getTitle(),
-                updateRequest.getContents(),
-                updateRequest.getFundingSchedule()
-                );
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
+        Path uploadDir = Paths.get("upload");
+        if (!Files.exists(uploadDir)) {
+            try {
+                Files.createDirectories(uploadDir);
+            } catch (IOException e) {
+                throw new BaseException(ExceptionEnum.UPLOAD_FAILED);
+            }
+        }
+
+        // 1. 글 수정
+        if (updateRequest.getContent() != null) {
+            project.update(updateRequest.getTitle(), updateRequest.getContent());
+        }
+
+        // 2. 썸네일 교체
+        if (thumbnail != null) {
+            fileService.updateThumbnail(thumbnail, project);
+        }
+
+        // 3. 기존 이미지 삭제
+        if (updateRequest.getDeleteImageIds() != null && !updateRequest.getDeleteImageIds().isEmpty()) {
+            List<File> toDelete = fileRepository.findAllById(updateRequest.getDeleteImageIds());
+            fileRepository.deleteAll(toDelete);
+        }
+
+        // 4. 이미지 추가
+        if (images != null) {
+            fileService.saveFile(images, authUser, project);
+        }
+
+        // Project 저장
         projectRepository.save(project);
-
-        List<FundingReward> rewards = updateRequest.getReward().stream()
-                .map(r -> new FundingReward(r.getPrice(), r.getDescription(), project))
-                .toList();
-
-        rewardRepository.saveAll(rewards);
-
-        fileService.saveFile(images, authUser, project.getId());
     }
 
     @Override

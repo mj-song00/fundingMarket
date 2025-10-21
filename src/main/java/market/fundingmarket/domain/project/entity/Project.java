@@ -4,14 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
+import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
-import market.fundingmarket.domain.reward.entity.FundingReward;
-import market.fundingmarket.domain.creator.entity.Creator;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
@@ -52,10 +49,6 @@ public class Project extends Timestamped {
     @ManyToOne
     private Creator creator;
 
-//    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "project_id")
-//    private List<FundingReward> rewards = new ArrayList<>();
-
     public Project (String title, Category category,
                    String contents, Long fundingAmount, String fundingSchedule, String expectedDeliveryDate,
                     Creator creator) {
@@ -65,7 +58,6 @@ public class Project extends Timestamped {
         this.fundingAmount = fundingAmount;
         this.fundingSchedule = fundingSchedule;
         this.expectedDeliveryDate = expectedDeliveryDate;
-//        this.rewards = rewards;
         this.creator = creator;
     }
 
@@ -74,12 +66,9 @@ public class Project extends Timestamped {
         this.status = fundingStatus;
     }
 
-    public void update(String title,  String contents,
-       String fundingSchedule
-    ) {
+    public void update(String title,  String contents) {
         this.title = title;
         this.contents = contents;
-        this.fundingSchedule = fundingSchedule;
     }
 
     public void updateDelete(){

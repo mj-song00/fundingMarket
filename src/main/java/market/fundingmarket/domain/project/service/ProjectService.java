@@ -10,9 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ProjectService {
-    void register(@Valid RegistrationRequest registrationRequest, AuthUser authUser,  List<MultipartFile> images);
+    void register(@Valid RegistrationRequest registrationRequest, AuthUser authUser,  List<MultipartFile> images , MultipartFile thumbnail);
 
-    void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId, List<MultipartFile> images);
+    void update(AuthUser authUser, UpdateFundingRequest updateRequest, Long fundingId, List<MultipartFile> images, MultipartFile thumbnail);
 
     ProjectResponse getProject(Long projectId);
 
