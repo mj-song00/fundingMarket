@@ -8,4 +8,5 @@ import java.util.List;
 public interface RewardRepository extends JpaRepository<Reward, Long> {
     List<Reward> findByProjectId(Long projectId);
 
+    Reward findRewardById(Long rewardId);
 }

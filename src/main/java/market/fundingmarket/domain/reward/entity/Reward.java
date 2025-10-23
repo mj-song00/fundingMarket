@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.project.entity.Project;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @Table(name = "reward")
@@ -22,7 +24,13 @@ public class Reward extends Timestamped {
     private Long price; // 후원 가격
 
     @Column
-    private String description; // 가격에 포함된 것
+    private String description; // 리워드 품목
+
+    @Column
+    private Integer quantity; // 제작 수량
+
+    @Column
+    private LocalDateTime deletedAt = null;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
@@ -32,5 +40,16 @@ public class Reward extends Timestamped {
         this.price = price;
         this.description = description;
         this.project = project;
+    }
+
+
+    public void update(String description, long price, int quantity) {
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }
