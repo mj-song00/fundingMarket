@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.project.entity.Project;
-import market.fundingmarket.domain.reward.entity.FundingReward;
+import market.fundingmarket.domain.reward.entity.Reward;
 import market.fundingmarket.domain.user.entity.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -41,11 +42,11 @@ public class Sponsorship extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reward_id", nullable = false)
-    private FundingReward reward; // 선택한 리워드
+    private Reward reward; // 선택한 리워드
 
 
     public Sponsorship (Long amount, int quantity,
-                        User user, Project project, FundingReward reward) {
+                        User user, Project project, Reward reward) {
         this.amount = amount;
         this.sponsoredAt = LocalDateTime.now();
         this.quantity = quantity;

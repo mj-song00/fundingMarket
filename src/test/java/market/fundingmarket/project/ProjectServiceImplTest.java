@@ -2,13 +2,10 @@ package market.fundingmarket.project;
 
 import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.creator.repository.CreatorRepository;
-import market.fundingmarket.domain.file.entity.File;
-import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
 import market.fundingmarket.domain.project.service.ProjectServiceImpl;
-import market.fundingmarket.domain.reward.entity.FundingReward;
 import market.fundingmarket.domain.user.dto.AuthUser;
 import market.fundingmarket.domain.user.enums.UserRole;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import market.fundingmarket.common.exception.BaseException;
 import market.fundingmarket.common.exception.ExceptionEnum;
+import market.fundingmarket.domain.file.entity.File;
+import market.fundingmarket.domain.file.repository.FileRepository;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
-import market.fundingmarket.domain.reward.entity.FundingReward;
+import market.fundingmarket.domain.reward.entity.Reward;
 import market.fundingmarket.domain.reward.repository.RewardRepository;
 import market.fundingmarket.domain.sponsorship.dto.request.CheckRewardRequest;
 import market.fundingmarket.domain.sponsorship.dto.response.SponsorResponse;
@@ -32,6 +34,7 @@ public class SponsorServiceImpl implements SponsorService {
     private final UserValidation userValidation;
     private final ProjectRepository projectRepository;
     private final RewardRepository rewardRepository;
+    private final FileRepository fileRepository;
 
     @Override
     @Transactional
@@ -42,7 +45,7 @@ public class SponsorServiceImpl implements SponsorService {
 
         Project project = projectRepository.findById(checkRewardRequest.getProjectId())
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
-        FundingReward reward = rewardRepository.findById(checkRewardRequest.getRewardId())
+        Reward reward = rewardRepository.findById(checkRewardRequest.getRewardId())
                 .orElseThrow(() -> new BaseException(ExceptionEnum.REWARD_NOT_FOUND));
 
         Sponsorship sponsor = new Sponsorship(
@@ -57,22 +60,30 @@ public class SponsorServiceImpl implements SponsorService {
     }
 
     @Override
+    @Transactional
     public List<SponsorResponse> getList(AuthUser authUser) {
+
         User user = getUser(authUser.getId());
 
-        List<Project> projects = sponsorRepository.findProjectsByUserId(user.getId());
+        List<Sponsorship> sponsorships = sponsorRepository.findByUserId(user.getId());
 
-        return projects.stream()
-                .map(project -> new SponsorResponse(
-                        project.getId(),
-                      //  project.getImage().isEmpty() ? null : project.getImage().get(0),
-                        project.getTitle(),
-                        project.getCreator(),
-                       // project.getRewards(),
-                        project.getExpectedDeliveryDate()
-                ))
+        return sponsorships.stream()
+                .map(sponsor -> {
+                    Project project = sponsor.getProject();
+
+                    // 섬네일 이미지 조회 (FileRepository 사용)  project.getImages() 제거
+                    List<File> thumbnailImages = fileRepository
+                            .findByProjectIdAndIsThumbnailTrue(project.getId()); //project_id 기준 조회
+
+                    // 선택한 리워드 조회 getFundingRewards() 제거, sponsor.getReward() 사용
+                    Reward selectedReward = sponsor.getReward();
+
+                    // DTO 생성  한 번에 생성자 통합
+                    return new SponsorResponse(sponsor, thumbnailImages, selectedReward);
+                })
                 .toList();
     }
+
 
     @Override
     public void cancel(AuthUser authUser, Long sponsorId) {
@@ -106,11 +117,11 @@ public class SponsorServiceImpl implements SponsorService {
         Project funding = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
-        if(!funding.getCreator().getId().equals(authUser.getId())){
-            throw new BaseException(ExceptionEnum.CREATOR_NOT_FOUND);
-        }
+//        if(!funding.getCreator().getId().equals(authUser.getId())){
+//            throw new BaseException(ExceptionEnum.CREATOR_NOT_FOUND);
+//        }
 
-        if (funding.getDeletedAt()!= null) throw new BaseException(ExceptionEnum.FUNDING_NOT_FOUND);
+        if (funding.getDeletedAt() != null) throw new BaseException(ExceptionEnum.FUNDING_NOT_FOUND);
 
         return funding;
     }

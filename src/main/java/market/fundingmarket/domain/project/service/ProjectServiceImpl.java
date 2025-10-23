@@ -15,7 +15,7 @@ import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
-import market.fundingmarket.domain.reward.entity.FundingReward;
+import market.fundingmarket.domain.reward.entity.Reward;
 import market.fundingmarket.domain.reward.repository.RewardRepository;
 import market.fundingmarket.domain.user.dto.AuthUser;
 import market.fundingmarket.domain.user.enums.UserRole;
@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,8 +64,8 @@ public class ProjectServiceImpl  implements ProjectService{
 
         projectRepository.save(funding);
 
-        List<FundingReward> rewards = registrationRequest.getFundingRewards().stream()
-                .map(r -> new FundingReward(r.getPrice(), r.getDescription(), funding))
+        List<Reward> rewards = registrationRequest.getFundingRewards().stream()
+                .map(r -> new Reward(r.getPrice(), r.getDescription(), funding))
                 .toList();
 
         rewardRepository.saveAll(rewards);
@@ -128,7 +126,7 @@ public class ProjectServiceImpl  implements ProjectService{
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
         List<File> files = fileRepository.findByProjectId(projectId);
-        List<FundingReward> rewards = rewardRepository.findByProjectId(projectId);
+        List<Reward> rewards = rewardRepository.findByProjectId(projectId);
         return new ProjectResponse(project, files, rewards);
     }
 
