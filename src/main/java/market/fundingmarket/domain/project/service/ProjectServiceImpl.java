@@ -126,7 +126,8 @@ public class ProjectServiceImpl  implements ProjectService{
                 .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
 
         List<File> files = fileRepository.findByProjectId(projectId);
-        List<Reward> rewards = rewardRepository.findByProjectId(projectId);
+        List<Reward> rewards = rewardRepository.findByProjectIdAndDeletedAtIsNull(projectId);
+
         return new ProjectResponse(project, files, rewards);
     }
 
