@@ -13,7 +13,7 @@ import market.fundingmarket.domain.project.entity.Project;
 @Table(name = "reward")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED) // 외부 직접 호출을 막기 위해 protected 설정
-public class FundingReward extends Timestamped {
+public class Reward extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class FundingReward extends Timestamped {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public FundingReward(Long price, String description, Project project) {
+    public  Reward(Long price, String description, Project project) {
         this.price = price;
         this.description = description;
         this.project = project;
