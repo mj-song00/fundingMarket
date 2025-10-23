@@ -44,7 +44,7 @@ public class Project extends Timestamped {
     private String expectedDeliveryDate; // 배송 예상일
 
     @Column
-    private LocalDateTime deletedAt;
+    private LocalDateTime deletedAt = null;
 
     @ManyToOne
     private Creator creator;
