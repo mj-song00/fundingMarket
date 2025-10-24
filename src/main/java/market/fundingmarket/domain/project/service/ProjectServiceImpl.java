@@ -65,7 +65,7 @@ public class ProjectServiceImpl  implements ProjectService{
         projectRepository.save(funding);
 
         List<Reward> rewards = registrationRequest.getFundingRewards().stream()
-                .map(r -> new Reward(r.getPrice(), r.getDescription(), funding))
+                .map(r -> new Reward(r.getTitle(),r.getPrice(), r.getDescription(), funding))
                 .toList();
 
         rewardRepository.saveAll(rewards);

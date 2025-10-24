@@ -24,10 +24,13 @@ public class Reward extends Timestamped {
     private Long price; // 후원 가격
 
     @Column
-    private String description; // 리워드 품목
+    private String description; // 리워드 설명
 
     @Column
     private Integer quantity; // 제작 수량
+
+    @Column
+    private String title; // 리워드 제목
 
     @Column
     private LocalDateTime deletedAt = null;
@@ -36,7 +39,8 @@ public class Reward extends Timestamped {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public  Reward(Long price, String description, Project project) {
+    public  Reward(String title, Long price, String description, Project project) {
+        this.title = title;
         this.price = price;
         this.description = description;
         this.project = project;
