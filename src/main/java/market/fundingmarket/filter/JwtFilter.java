@@ -66,8 +66,8 @@ public class JwtFilter  implements Filter {
          * todo 카테고리, 제목 검색 포함
          */
         if (url.startsWith("/api/v1/users/auth/sign-up") || url.startsWith("/api/v1/users/auth/sign-in")
-                || (url.startsWith("/swagger-ui") || url.startsWith("/v3/api-docs")
-                || (url.startsWith("/api/v1/creator/sign-up")) || url.matches("^/api/v1/project/\\d+$")  )
+                || (url.startsWith("/swagger-ui") || url.startsWith("/v3/api-docs") || url.startsWith("/")
+                || (url.startsWith("/api/v1/creator/sign-up")) || url.matches("^/api/v1/project/\\d+$"))
         ) {
             chain.doFilter(request, response);
             return;
