@@ -34,7 +34,9 @@ public class AuthController {
         // 리프레시 토큰을 HTTP-Only 쿠키로 설정
         authService.setRefreshTokenCookie(response, refreshToken);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(accessToken);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
     }
 
     // 리프레시 토큰으로 액세스 토큰 재발급
