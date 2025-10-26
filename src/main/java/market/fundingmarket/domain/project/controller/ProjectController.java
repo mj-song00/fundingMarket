@@ -10,7 +10,9 @@ import market.fundingmarket.common.response.ApiResponse;
 import market.fundingmarket.common.response.ApiResponseEnum;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
+import market.fundingmarket.domain.project.dto.response.ProjectListResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectResponse;
+import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.service.ProjectService;
 import market.fundingmarket.domain.user.dto.AuthUser;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Project", description = "project 관련 API")
 @RestController
@@ -82,5 +86,24 @@ public class ProjectController {
         projectService.termination(authUser, fundingId);
         ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.UPDATE_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    @Operation(summary ="프로젝트 카테고리 조회", description = "프로젝트에서 사용 가능한 카테고리 목록을 조회합니다.")
+    @GetMapping("/category")
+    public  List<Map<String, String>> getCategories() {
+        return Arrays.stream(Category.values())
+                .map(c -> Map.of(
+                        "key", c.name(),          // 서버에서 사용할 값
+                        "value", c.getMessage() // 클라이언트에게 보여줄 한글
+                ))
+                .toList();
+    }
+
+    @Operation(summary = "카테고리별 프로젝트 조회", description = "특정 카테고리의 프로젝트 목록을 조회합니다.")
+    @GetMapping("/category/{categoryKey}")
+    public List<ProjectListResponse> getProjectsByCategory(@PathVariable String categoryKey) {
+        Category categoryEnum = Category.valueOf(categoryKey.toUpperCase());
+        return projectService.findByCategory(categoryEnum);
     }
 }

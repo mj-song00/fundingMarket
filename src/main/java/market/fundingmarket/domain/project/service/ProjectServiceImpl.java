@@ -11,8 +11,10 @@ import market.fundingmarket.domain.file.repository.FileRepository;
 import market.fundingmarket.domain.file.service.FileServie;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
+import market.fundingmarket.domain.project.dto.response.ProjectListResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.entity.Project;
+import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
 import market.fundingmarket.domain.reward.entity.Reward;
@@ -144,6 +146,22 @@ public class ProjectServiceImpl  implements ProjectService{
         funding.updateStatus(FundingStatus.INTERRUPTION);
         funding.updateDelete();
         projectRepository.save(funding);
+    }
+
+    @Override
+    public List<ProjectListResponse> findByCategory(Category categoryKey) {
+        List<Project> projects = projectRepository.findByCategory(categoryKey);
+        System.out.println(projects);
+        return projects.stream()
+                .map(project -> {
+                    // 썸네일 1개만 가져오기 (없을 수도 있음)
+                    String thumbnailUrl = fileRepository.findByProjectAndIsThumbnailTrue(project)
+                            .map(File::getImageUrl)
+                            .orElse(null);
+
+                    return new ProjectListResponse(project, thumbnailUrl);
+                })
+                .toList();
     }
 
 
