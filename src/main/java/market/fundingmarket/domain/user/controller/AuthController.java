@@ -35,7 +35,7 @@ public class AuthController {
         authService.setRefreshTokenCookie(response, refreshToken);
 
         return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization",  accessToken)
                 .build();
     }
 
