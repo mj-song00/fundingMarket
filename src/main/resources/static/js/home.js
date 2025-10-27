@@ -1,13 +1,31 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     const token = localStorage.getItem("token");
-//     if (!token) {
-//         window.location.href = "/login.html";
-//         return;
-//     }
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("accessToken"); // 토큰 확인
+    const authButton = document.getElementById("logoutButton"); // 버튼 그대로 사용
+
+    if (!authButton) return;
+
+
+    if (token) {
+        // 로그인 상태
+        authButton.textContent = "로그아웃";
+        authButton.onclick = () => {
+            localStorage.removeItem("accessToken");
+            location.reload();
+        };
+    } else {
+        // 비로그인 상태
+        authButton.textContent = "로그인";
+        authButton.onclick = () => {
+            // 로그인 페이지로 이동
+            const currentUrl = encodeURIComponent(window.location.href);
+            window.location.href = `/login.html?redirect=${currentUrl}`;
+        };
+    }
+
 
     // 기본 카테고리
     const defaultCategoryKey = "WEBTOON";
-// 1. 카테고리 불러오기
+    // 1. 카테고리 불러오기
     fetch('/api/v1/project/category')
         .then(response => response.json())
         .then(categories => {
@@ -74,14 +92,14 @@
                     <p class="card-text">${project.contents || ''}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="/projectDetail.html?gatherId=${project.id}" class="text-blue-500 hover:text-blue-700">상세보기</a>
+                    <a href="/projectDetail.html?projectId=${project.id}" class="text-blue-500 hover:text-blue-700">상세보기</a>
                 </div>
             </div>
         `;
 
             // 카드 클릭 시 상세조회 페이지로 이동
             col.querySelector('.card').addEventListener('click', () => {
-                window.location.href = `/projectDtail.html?projectId=${project.id}`;
+                window.location.href = `/projectDetail.html?projectId=${project.id}`;
             });
 
             projectList.appendChild(col);
@@ -95,4 +113,4 @@
         localStorage.removeItem("token");
         window.location.href = "/home.html";
     });
-// });
+});
