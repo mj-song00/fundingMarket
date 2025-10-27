@@ -62,8 +62,9 @@ public class JwtFilter  implements Filter {
          * todo 카테고리, 제목 검색 포함
          */
         if (path.startsWith("/api/v1/users/auth/sign-up") || path.startsWith("/api/v1/users/auth/sign-in")
-                || path.startsWith("/api/v1/creator/sign-up") || path.matches("^/api/v1/project/\\d+$")
-                || path.startsWith("/api/v1/project/category") ||SWAGGER_WHITELIST.stream().anyMatch(path::startsWith)
+                || path.startsWith("/api/v1/creator/sign-up") ||path.matches("^/api/v1/project/\\d+/?(\\?.*)?$")
+                || path.startsWith("/api/v1/project/category")
+                ||SWAGGER_WHITELIST.stream().anyMatch(path::startsWith)
         ) {
             chain.doFilter(httpRequest, httpResponse);
             return;
