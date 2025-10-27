@@ -1,13 +1,12 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        window.location.href = "/login.html";
-        return;
-    }
+// document.addEventListener("DOMContentLoaded", function () {
+//     const token = localStorage.getItem("token");
+//     if (!token) {
+//         window.location.href = "/login.html";
+//         return;
+//     }
 
     // 기본 카테고리
     const defaultCategoryKey = "WEBTOON";
-
 // 1. 카테고리 불러오기
     fetch('/api/v1/project/category')
         .then(response => response.json())
@@ -75,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <p class="card-text">${project.contents || ''}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="/gatherDetail.html?gatherId=${project.id}" class="text-blue-500 hover:text-blue-700">상세보기</a>
+                    <a href="/projectDetail.html?gatherId=${project.id}" class="text-blue-500 hover:text-blue-700">상세보기</a>
                 </div>
             </div>
         `;
@@ -96,4 +95,4 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.removeItem("token");
         window.location.href = "/home.html";
     });
-});
+// });
