@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
-
 @Slf4j
 @Component
 public class JwtFilter  implements Filter {
@@ -37,7 +35,6 @@ public class JwtFilter  implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -50,18 +47,12 @@ public class JwtFilter  implements Filter {
             return;
         }
 
+        String path = httpRequest.getRequestURI();
 
 
-        String url = httpRequest.getRequestURI();
-
-        // Swagger 경로는 JWT 검증 없이 통과
-        if (SWAGGER_WHITELIST.stream().anyMatch(path::startsWith)) {
-            chain.doFilter(request, response);
-            return;
-        }
-
+        // /api/ 아닌 요청은 패스
         if (!path.startsWith("/api/")) {
-            chain.doFilter(request, response);
+            chain.doFilter(httpRequest, httpResponse);
             return;
         }
 
@@ -70,26 +61,22 @@ public class JwtFilter  implements Filter {
          * 페이지 상세조회 jwt 불필요
          * todo 카테고리, 제목 검색 포함
          */
-        if (url.startsWith("/api/v1/users/auth/sign-up") || url.startsWith("/api/v1/users/auth/sign-in")
-                || (url.startsWith("/swagger-ui") || url.startsWith("/v3/api-docs") || url.startsWith("/main")
-                || (url.startsWith("/api/v1/creator/sign-up")) || url.matches("^/api/v1/project/\\d+$"))
+        if (path.startsWith("/api/v1/users/auth/sign-up") || path.startsWith("/api/v1/users/auth/sign-in")
+                || path.startsWith("/api/v1/creator/sign-up") || path.matches("^/api/v1/project/\\d+$")
+                || path.startsWith("/api/v1/project/category") ||SWAGGER_WHITELIST.stream().anyMatch(path::startsWith)
         ) {
-            chain.doFilter(request, response);
+            chain.doFilter(httpRequest, httpResponse);
             return;
         }
 
-        // 정적 리소스에 대한 요청은 JWT 검증을 생략
-        if (url.startsWith("/images/") || url.startsWith("/css/") || url.startsWith("/js/") || url.startsWith("/webjars/")) {
+        if (path.startsWith("/images/") || path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/webjars/")) {
             chain.doFilter(request, response);
+            chain.doFilter(httpRequest, httpResponse);
             return;
         }
 
-
-        // 헤더에서 Authorization 토큰을 가져옵니다.
+        // Authorization 헤더 추출
         String authorizationHeader = httpRequest.getHeader("Authorization");
-
-
-        // refreshToken 재발급 API인 경우 쿠키에서 refreshToken 꺼내기
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             if (httpRequest.getCookies() != null) {
                 for (Cookie cookie : httpRequest.getCookies()) {
@@ -110,17 +97,18 @@ public class JwtFilter  implements Filter {
         String token = jwtUtil.getJwtFromHeader(httpRequest);
         try {
             Claims claims = jwtUtil.extractClaims(token);
-            // 토큰을 검증하고, 유효한 경우 필터 체인을 타고 다음 필터로 이동합니다.
-            if (jwtUtil.validateToken(token)) {
-                // 필요하다면 요청에 사용자 정보를 추가할 수 있습니다.
-                httpRequest.setAttribute("id", UUID.fromString(claims.getSubject()));
-                httpRequest.setAttribute("username", (claims.get("username", String.class)));
-                httpRequest.setAttribute("role", claims.get("role", String.class));
 
-                chain.doFilter(request, response);
-            } else {
+            if (!jwtUtil.validateToken(token)) {
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 토큰이 유효하지 않습니다.");
+                return;
             }
+
+            // request attribute에 저장
+            httpRequest.setAttribute("id", UUID.fromString(claims.getSubject()));
+            httpRequest.setAttribute("username", claims.get("username", String.class));
+            httpRequest.setAttribute("role", claims.get("role", String.class));
+
+            chain.doFilter(httpRequest, httpResponse);
         } catch (Exception e) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 토큰 검증 중 오류가 발생했습니다.");
         }
