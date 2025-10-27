@@ -44,8 +44,6 @@ public class FileServie {
             }
         }
     }
-
-    // 이미지 추가
     @Transactional
     public List<String> saveFile(List<MultipartFile> addImages, AuthUser authUser, Project project) {
         getUser(authUser.getId());
@@ -55,15 +53,31 @@ public class FileServie {
         List<File> newImages = new ArrayList<>();
         List<String> fileUrls = new ArrayList<>();
 
+        Path uploadDir = Paths.get(System.getProperty("user.dir"), "upload");
+        try {
+            Files.createDirectories(uploadDir); // 폴더 없으면 생성
+        } catch (IOException e) {
+            throw new BaseException(ExceptionEnum.UPLOAD_FAILED);
+        }
+
         for (MultipartFile multipartFile : addImages) {
             try {
                 String fileName = UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
                 Path path = uploadDir.resolve(fileName);
                 Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-                File image = new File(path.toAbsolutePath().toString(), multipartFile.getOriginalFilename(), project, false);
+                File image = new File(
+                        path.toAbsolutePath().toString(),
+                        multipartFile.getOriginalFilename(),
+                        project,
+                        false
+                );
                 newImages.add(image);
-                fileUrls.add(path.toAbsolutePath().toString());
+
+                // 프론트에서 접근할 수 있는 URL로 변환
+                String fileUrl = "/upload/" + fileName;
+                fileUrls.add(fileUrl);
+
             } catch (IOException e) {
                 throw new BaseException(ExceptionEnum.UPLOAD_FAILED);
             }
