@@ -1,17 +1,17 @@
 package market.fundingmarket.common.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import market.fundingmarket.common.annotation.Auth;
 import market.fundingmarket.domain.user.dto.AuthUser;
+import market.fundingmarket.domain.user.enums.UserRole;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
-import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.bind.support.WebDataBinderFactory;
-import java.util.UUID;
-import jakarta.servlet.http.HttpServletRequest;
-import market.fundingmarket.domain.user.enums.UserRole;
-import market.fundingmarket.common.annotation.Auth;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.UUID;
 public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
