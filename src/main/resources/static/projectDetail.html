@@ -4,8 +4,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>프로젝트 상세 페이지</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-          rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <script defer src="https://js.tosspayments.com/v1/payment-widget"></script>
     <script defer src="/js/projectDetail.js"></script>
     <style>
         body {
@@ -64,9 +64,27 @@
         .reward-item:hover {
             transform: scale(1.02);
         }
+
+        /* 모달 */
+        #paymentModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+        }
+
+        #paymentModal .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            width: 400px;
+        }
     </style>
 </head>
-
 <body>
 <!-- 상단 네비게이션 -->
 <nav class="bg-blue-500 p-4">
@@ -82,20 +100,15 @@
     <div class="content">
         <h1 id="projectTitle" class="text-3xl font-bold mb-4"></h1>
 
-        <!-- 카테고리 및 일정 -->
         <div class="text-gray-600 mb-4">
             <p>카테고리: <span id="projectCategory"></span></p>
             <p>펀딩 일정: <span id="fundingSchedule"></span></p>
             <p>예상 전달일: <span id="expectedDeliveryDate"></span></p>
         </div>
 
-        <!-- 이미지 리스트 -->
         <div id="imageList" class="flex flex-wrap gap-4 mb-6"></div>
-
-        <!-- 프로젝트 본문 -->
         <div id="projectContents" class="text-gray-800 leading-relaxed mb-6"></div>
 
-        <!-- 제작자 소개 -->
         <div class="border-t pt-4">
             <h3 class="text-xl font-semibold mb-2">제작자 소개</h3>
             <p id="creatorIntroduce" class="text-gray-700"></p>
@@ -105,24 +118,21 @@
     <!-- 오른쪽: 리워드 박스 -->
     <aside class="reward-box">
         <h2 class="text-xl font-bold mb-4">리워드</h2>
-        <div id="rewardList" class="reward-list">
-            <!-- JS에서 리워드 자동 렌더링 -->
-        </div>
+        <div id="rewardList" class="reward-list"></div>
     </aside>
 </div>
 
-<script>
-    // 리워드 스크롤 제한 처리 (JS에서 렌더링 후에도 적용되도록)
-    const observer = new MutationObserver(() => {
-        const list = document.getElementById("rewardList");
-        if (!list) return;
-
-        const rewardCount = list.children.length;
-        list.style.overflowY = rewardCount > 5 ? "auto" : "visible";
-    });
-
-    observer.observe(document.body, {childList: true, subtree: true});
-</script>
+<!-- 결제 모달 -->
+<div id="paymentModal">
+    <div class="modal-content">
+        <h3 class="text-xl font-bold mb-4">후원 결제 확인</h3>
+        <p id="paymentInfo" class="mb-6 text-gray-700"></p>
+        <div class="flex justify-center gap-4">
+            <button id="confirmPayment" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">결제하기</button>
+            <button id="cancelPayment" class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">취소</button>
+        </div>
+    </div>
+</div>
 
 <footer class="bg-blue-500 text-white text-center py-4 mt-auto">
     <div class="container mx-auto">
