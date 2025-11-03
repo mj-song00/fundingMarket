@@ -3,6 +3,7 @@ package market.fundingmarket.domain.payment.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
@@ -11,6 +12,7 @@ import market.fundingmarket.common.entity.Timestamped;
 @Entity
 @Table(name = "payment")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Payment extends Timestamped {
     @Id
     private String paymentKey; //결제 키값
