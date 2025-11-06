@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <!-- SDK 추가 -->
+  <script src="https://js.tosspayments.com/v2/standard"></script>
+  <script defer src="/js/authStatus.js"></script>
+  <script defer src="/js/payment.js"></script>
+</head>
+<body>
+
+<!--배송지 입력-->
+<div class="address-container border p-4 rounded w-80 mx-auto mt-4">
+  <h2 class="text-lg font-semibold mb-3 text-center">배송지 입력</h2>
+
+  <label for="address" class="block mb-1 text-sm font-medium">주소</label>
+  <input
+          type="text"
+          id="address"
+          name="address"
+          class="w-full border rounded p-1.5 mb-2 text-sm"
+          placeholder="주소"
+          required
+  >
+
+  <label for="phone" class="block mb-1 text-sm font-medium">전화번호</label>
+  <input
+          type="tel"
+          id="phone"
+          name="phone"
+          class="w-full border rounded p-1.5 mb-2 text-sm"
+          placeholder="01012345678"
+          required
+  >
+</div>
+<br>
+<!-- 결제 버튼 -->
+<div class="text-center">
+  <button class="button" style="margin-top: 30px" onclick="requestPayment()">결제하기</button>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("로그인이 필요한 페이지입니다.");
+      window.location.href = "/login.html";
+      return;
+    }
+
+    // ✅ payment.js의 getProfile() 호출해서 authUser 세팅
+    const user = await getProfile();
+    console.log(user);
+    if (!user.email || !user.nickName) {
+      alert("프로필 정보를 불러오지 못했습니다. 다시 로그인해주세요.");
+      window.location.href = "/login.html";
+      return;
+    }
+
+    // ------  SDK 초기화 ------
+    // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
+    const clientKey = "test_ck_yL0qZ4G1VOPgok2RnamvroWb2MQY";
+    const customerKey = "SE_uUi3MjM-RH1jzca-9e";
+    const tossPayments = TossPayments(clientKey);
+    // 회원 결제
+    // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
+    const payment = tossPayments.payment({ customerKey });
+    // 비회원 결제
+    // const payment = tossPayments.payment({customerKey: TossPayments.ANONYMOUS})
+    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+    // @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
+
+    // 전역에 등록
+    window.requestPayment = async function() {
+      const orderName = sessionStorage.getItem("product_name");
+      const total = Number(sessionStorage.getItem("total"));
+
+      await payment.requestPayment({
+        method: "CARD", // 카드 결제
+        amount: {
+          currency: "KRW",
+          value: total
+        },
+        orderId: "ORDER_" + new Date().getTime(), // 고유 주문번호
+        orderName: orderName,
+        successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+        failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+        customerEmail: user.email,
+        customerName: user.nickName,
+        customerMobilePhone: document.getElementById("phone").value,
+        // 카드 결제에 필요한 정보
+        card: {
+          useEscrow: false,
+          flowMode: "DEFAULT", // 통합결제창 여는 옵션
+          useCardPoint: false,
+          useAppCardOnly: false,
+        },
+      });
+
+      console.log("💡 결제 요청 전 데이터 확인");
+      console.log("orderName:", orderName);
+      console.log("total:", total);
+      console.log("orderId:", orderId);
+
+    };
+  });
+</script>
+</body>
+</html>

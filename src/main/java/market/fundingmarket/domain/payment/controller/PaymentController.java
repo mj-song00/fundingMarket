@@ -28,8 +28,6 @@ import java.util.Base64;
 @Slf4j
 public class PaymentController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @RequestMapping(value = "/confirm")
     public ResponseEntity<String> confirmPayment(@RequestBody String jsonBody) {
         System.out.println("요청 바디 = " + jsonBody);
@@ -47,32 +45,25 @@ public class PaymentController {
             System.out.println("✅ orderId = " + orderId);
             System.out.println("✅ amount = " + amount);
 
-            // ✅ Authorization 헤더 생성
-            String secretKey = "dGVzdF9za19lcVJHZ1lPMXI1TVJqQmVRekxQMnJRbk4yRXlhOg=="; // ← 대시보드의 Secret Key 원본
-            String encodedAuth = Base64.getEncoder()
-                    .encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
+            //  Authorization 헤더 생성
+            String secretKey = ; // test용 공개 키
 
-
-            // ✅ 요청 JSON 구성
+            // 요청 JSON 구성
             JSONObject requestJson = new JSONObject();
             requestJson.put("paymentKey", paymentKey);
             requestJson.put("orderId", orderId);
             requestJson.put("amount", Integer.parseInt(amount));
 
-            // ✅ HTTP 요청 전송
+            // HTTP 요청 전송
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.tosspayments.com/v1/payments/confirm"))
-                    .header("Authorization", "Basic " + encodedAuth)
+                    .header("Authorization", "Basic " + secretKey)
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestJson.toString()))
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // ✅ 응답 출력
-            System.out.println("💬 토스 응답 코드 = " + response.statusCode());
-            System.out.println("💬 토스 응답 본문 = " + response.body());
 
             return ResponseEntity.status(response.statusCode()).body(response.body());
 
