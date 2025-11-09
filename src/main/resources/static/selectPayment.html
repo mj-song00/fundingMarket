@@ -50,7 +50,7 @@
 
     // ✅ payment.js의 getProfile() 호출해서 authUser 세팅
     const user = await getProfile();
-    console.log(user);
+
     if (!user.email || !user.nickName) {
       alert("프로필 정보를 불러오지 못했습니다. 다시 로그인해주세요.");
       window.location.href = "/login.html";
@@ -74,6 +74,10 @@
     window.requestPayment = async function() {
       const orderName = sessionStorage.getItem("product_name");
       const total = Number(sessionStorage.getItem("total"));
+      const inputAddress = document.getElementById("address").value;
+      const inputPhone = document.getElementById("phone").value;
+      sessionStorage.setItem("address", inputAddress);
+      sessionStorage.setItem("phone", inputPhone);
 
       await payment.requestPayment({
         method: "CARD", // 카드 결제
@@ -96,12 +100,6 @@
           useAppCardOnly: false,
         },
       });
-
-      console.log("💡 결제 요청 전 데이터 확인");
-      console.log("orderName:", orderName);
-      console.log("total:", total);
-      console.log("orderId:", orderId);
-
     };
   });
 </script>

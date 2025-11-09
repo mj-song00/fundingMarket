@@ -1,7 +1,6 @@
 package market.fundingmarket.domain.order.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Order extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,4 +42,19 @@ public class Order extends Timestamped {
 
     private String address; // 배송 주소
 
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    public Order(User user, String orderId, String paymentKey, String orderName, int totalAmount, String method, String status, LocalDateTime approvedAt, String address, String phoneNumber) {
+        this.user = user;
+        this.orderId = orderId;
+        this.paymentKey = paymentKey;
+        this.orderName = orderName;
+        this.totalAmount = totalAmount;
+        this.method = method;
+        this.status = status;
+        this.approvedAt = approvedAt;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+    }
 }

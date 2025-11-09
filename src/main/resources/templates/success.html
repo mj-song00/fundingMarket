@@ -17,11 +17,16 @@
   const orderId = urlParams.get("orderId");
   const amount = urlParams.get("amount");
 
+  const inputAddress = sessionStorage.getItem("address");
+  const inputPhone = sessionStorage.getItem("phone");
+
   async function confirm() {
     const requestData = {
       paymentKey: paymentKey,
       orderId: orderId,
       amount: amount,
+      address : inputAddress,
+      phoneNumber : inputPhone,
     };
 
 

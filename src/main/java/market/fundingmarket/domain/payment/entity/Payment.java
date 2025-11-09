@@ -3,21 +3,22 @@ package market.fundingmarket.domain.payment.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
 @Table(name = "payment")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Payment extends Timestamped {
     @Id
     private String paymentKey; //결제 키값
 
-    private Long userId; //결제한 유저
+    private UUID userId; //결제한 유저
 
     private String orderName; // 결제 이름
 
@@ -29,5 +30,21 @@ public class Payment extends Timestamped {
 
     private String requestedAt; // 결제일
 
-    private String approvedAt; // 결제 승인일
+    private LocalDateTime approvedAt; // 결제 요청
+
+    private String orderId;
+
+    public Payment(String paymentKey, UUID userId, String orderName, String method,
+                   Integer price, String status, String requestedAt, LocalDateTime approvedAt,
+                   String orderId) {
+        this.paymentKey = paymentKey;
+        this.userId = userId;
+        this.orderName = orderName;
+        this.method = method;
+        this.price = price;
+        this.status = status;
+        this.requestedAt = requestedAt;
+        this.approvedAt = approvedAt;
+        this.orderId = orderId;
+    }
 }
