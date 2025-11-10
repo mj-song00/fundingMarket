@@ -49,7 +49,6 @@ public class PaymentService {
             // 요청 Object 구성
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(paymentRequest);
-                System.out.println("잉 : "+requestBody);
 
             // HTTP 요청 전송
             HttpRequest request = HttpRequest.newBuilder()
@@ -64,7 +63,6 @@ public class PaymentService {
 
             // ✅ Toss 응답 파싱
             JsonNode json = objectMapper.readTree(response.body());
-            System.out.println("엥 = "+json);
 
             // 필요한 데이터만 추출
             String paymentKey = json.get("paymentKey").asText();
