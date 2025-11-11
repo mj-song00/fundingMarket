@@ -50,6 +50,9 @@ dependencies {
     //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    //s3
+    implementation(platform("software.amazon.awssdk:bom:2.38.2"))
+    implementation("software.amazon.awssdk:s3")
 }
 
 tasks.named('test') {
