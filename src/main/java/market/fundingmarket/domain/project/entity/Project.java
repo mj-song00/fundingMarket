@@ -3,6 +3,7 @@ package market.fundingmarket.domain.project.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import market.fundingmarket.common.entity.Timestamped;
 import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.project.enums.Category;
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 @Entity
 @Table(name = "project")
 @NoArgsConstructor
+@Setter
 public class Project extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

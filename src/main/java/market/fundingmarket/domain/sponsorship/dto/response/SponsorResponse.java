@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 public class SponsorResponse {
     private final Long id;
-    private final Long amount;
+    private final int amount;
     private final LocalDateTime sponsoredAt;
     private final int quantity;
     private final boolean cancelled;
