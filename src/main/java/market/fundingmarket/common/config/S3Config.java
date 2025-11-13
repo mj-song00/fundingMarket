@@ -19,7 +19,7 @@ public class S3Config {
     private String awsSecretKey;
 
     @Value("${aws.s3.bucket}")
-    private String bucket;  // 여기 추가
+    private String bucket;
 
     @Value("${aws.s3.region}")
     private String region;
