@@ -50,6 +50,7 @@ public class Creator extends Timestamped  implements Authenticatable {
     private LocalDateTime deletedAt;
 
     @Column
+    @Builder.Default
     private boolean isActive = true;
 
 
