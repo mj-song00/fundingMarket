@@ -12,5 +12,5 @@ public class CheckRewardRequest {
 
     private int quantity;
 
-    private Long amount;
+    private int amount;
 }

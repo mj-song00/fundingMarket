@@ -9,7 +9,6 @@ import market.fundingmarket.domain.reward.entity.Reward;
 import market.fundingmarket.domain.user.entity.User;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Entity
@@ -21,7 +20,7 @@ public class Sponsorship extends Timestamped {
     private Long id;
 
     @Column
-    private Long amount; // 후원 금액
+    private int amount; // 후원 금액
 
     @Column
     private LocalDateTime sponsoredAt; // 후원 시점
@@ -45,7 +44,7 @@ public class Sponsorship extends Timestamped {
     private Reward reward; // 선택한 리워드
 
 
-    public Sponsorship (Long amount, int quantity,
+    public Sponsorship (int amount, int quantity,
                         User user, Project project, Reward reward) {
         this.amount = amount;
         this.sponsoredAt = LocalDateTime.now();
