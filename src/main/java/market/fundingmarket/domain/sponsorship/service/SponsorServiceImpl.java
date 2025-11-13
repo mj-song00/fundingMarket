@@ -56,6 +56,8 @@ public class SponsorServiceImpl implements SponsorService {
                 reward
         );
 
+        project.updateAmount(checkRewardRequest.getAmount());
+
         sponsorRepository.save(sponsor);
     }
 
