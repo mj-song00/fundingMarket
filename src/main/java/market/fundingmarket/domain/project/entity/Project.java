@@ -8,7 +8,9 @@ import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Entity
@@ -31,10 +33,16 @@ public class Project extends Timestamped {
     private String contents;
 
     @Column(nullable = false)
-    private Long fundingAmount; // 펀딩 금액
+    private Long fundingAmount; // 펀딩 목표 금액
+
+    @Column
+    private int collectedAmount; // 현재 모금액
 
     @Column(nullable = false)
     private String fundingSchedule; // 펀딩 일정 (2025. 01.01 - 2025 03.31)
+
+    @Column
+    private LocalDate endDate; // 종료일, batch에 사용됨
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -59,6 +67,7 @@ public class Project extends Timestamped {
         this.fundingSchedule = fundingSchedule;
         this.expectedDeliveryDate = expectedDeliveryDate;
         this.creator = creator;
+        this.calculateEndDate();
     }
 
 
@@ -73,5 +82,16 @@ public class Project extends Timestamped {
 
     public void updateDelete(){
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public void calculateEndDate() {
+        if (this.fundingSchedule != null && this.fundingSchedule.contains(" - ")) {
+            String end = this.fundingSchedule.split(" - ")[1].trim();
+            this.endDate = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        }
+    }
+
+    public void updateAmount(int addedAmount) {
+        this.collectedAmount += addedAmount;
     }
 }
