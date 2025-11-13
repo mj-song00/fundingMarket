@@ -53,6 +53,9 @@ dependencies {
     //s3
     implementation(platform("software.amazon.awssdk:bom:2.38.2"))
     implementation("software.amazon.awssdk:s3")
+
+    //batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
 }
 
 tasks.named('test') {
