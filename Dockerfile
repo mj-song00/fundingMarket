@@ -9,4 +9,4 @@ FROM eclipse-temurin:17-jre
 COPY --from=build /app/build/libs/*.jar app.jar
 ENV PROD_SERVER_PORT=8080
 EXPOSE 8080
-ENTRYPOINT ["sh", "-c", "java -jar /app.jar --server.port=${PROD_SERVER_PORT}"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=$PROD_SERVER_PORT"]
