@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.fundingmarket.common.entity.Timestamped;
+import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -45,7 +46,20 @@ public class Order extends Timestamped {
     @Column(nullable = false)
     private String phoneNumber;
 
-    public Order(User user, String orderId, String paymentKey, String orderName, int totalAmount, String method, String status, LocalDateTime approvedAt, String address, String phoneNumber) {
+    private Boolean isCanceled;
+
+    private LocalDateTime canceldedAt;
+
+    private int refundAmount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    public Order(User user, String orderId, String paymentKey,
+                 String orderName, int totalAmount, String method,
+                 String status, LocalDateTime approvedAt,
+                 String address, String phoneNumber, Project project) {
         this.user = user;
         this.orderId = orderId;
         this.paymentKey = paymentKey;
@@ -56,5 +70,14 @@ public class Order extends Timestamped {
         this.approvedAt = approvedAt;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.project = project;
+    }
+
+    public void updateStatus(String status){
+        this.status = status;
+    }
+
+    public void updateCanceledAt(LocalDateTime time){
+        this.canceldedAt = time;
     }
 }

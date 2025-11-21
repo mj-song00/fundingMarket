@@ -44,7 +44,7 @@ public class Project extends Timestamped {
     private String fundingSchedule; // 펀딩 일정 (2025. 01.01 - 2025 03.31)
 
     @Column
-    private LocalDate endDate; // 종료일, batch에 사용됨
+    private LocalDateTime endDate; // 종료일, batch에 사용됨
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -89,11 +89,15 @@ public class Project extends Timestamped {
     public void calculateEndDate() {
         if (this.fundingSchedule != null && this.fundingSchedule.contains(" - ")) {
             String end = this.fundingSchedule.split(" - ")[1].trim();
-            this.endDate = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+            this.endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         }
     }
 
     public void updateAmount(int addedAmount) {
         this.collectedAmount += addedAmount;
+    }
+
+    public boolean isEnded() {
+        return LocalDateTime.now().isAfter(endDate);
     }
 }

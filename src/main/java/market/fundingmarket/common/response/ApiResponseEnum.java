@@ -13,7 +13,8 @@ public enum ApiResponseEnum {
     UPDATE_SUCCESS("수정이 완료되었습니다."),
     GET_SUCCESS("조회 성공"),
     SELECT_REWARD_SUCCESS("리워드 선택이 완료되었습니다."),
-    FUNDING_CANCEL_SUCCESS("후원이 취소되었습니다.");
+    FUNDING_CANCEL_SUCCESS("후원이 취소되었습니다."),
+    CANCEL_SUCCESS("결제가 취소되었습니다.");
 
     private final String message;
 

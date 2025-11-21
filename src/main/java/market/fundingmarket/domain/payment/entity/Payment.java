@@ -34,6 +34,10 @@ public class Payment extends Timestamped {
 
     private String orderId;
 
+    private String cancelReason;
+
+
+
     public Payment(String paymentKey, UUID userId, String orderName, String method,
                    Integer price, String status, String requestedAt, LocalDateTime approvedAt,
                    String orderId) {
@@ -46,5 +50,9 @@ public class Payment extends Timestamped {
         this.requestedAt = requestedAt;
         this.approvedAt = approvedAt;
         this.orderId = orderId;
+    }
+
+    public void updateCancelReason(String reason){
+        this.cancelReason = reason;
     }
 }

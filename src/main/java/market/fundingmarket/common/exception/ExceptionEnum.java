@@ -34,7 +34,14 @@ public enum ExceptionEnum {
     TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST,"TYPE_NOT_FOUND","타입이 올바르지 않습니다." ),
 
     UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "UPLOAD_FAILED","파일 업로드에 실패하였습니다." ),
-    PAYMENT_ERROR(HttpStatus.BAD_REQUEST,"PAYMENT_ERROR","결제 내역을 확인해주세요.");
+    PAYMENT_ERROR(HttpStatus.BAD_REQUEST,"PAYMENT_ERROR","결제 내역을 확인해주세요."),
+    ORDER_NOT_FOUND(HttpStatus.BAD_REQUEST,"ORDER_NOT_FOUND", "주문 내역을 찾지 못했습니다."),
+    INVALID_USER_ACCESS(HttpStatus.BAD_REQUEST,"INVALID_USER_ACCESS","잘못된 접근입니다." ),
+    ALREADY_CANCELED(HttpStatus.BAD_REQUEST,"ALREADY_CANCELED","이미 결제가 취소되었습니다." ),
+    REFUND_NOT_ALLOWED(HttpStatus.BAD_REQUEST,"REFUND_NOT_ALLOWED","결제 취소기간이 지났습니다." ),
+    PAYMENT_CANCEL_FAIL(HttpStatus.BAD_REQUEST,"PAYMENT_CANCEL_FAIL","결제취소 요청이 실패했습니다." );
+
+
 
     private final HttpStatus status;
     private final String errorCode;

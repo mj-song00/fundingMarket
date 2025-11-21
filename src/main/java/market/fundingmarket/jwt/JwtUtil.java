@@ -35,10 +35,10 @@ public class JwtUtil {
     private String secretKey;
 
     @Value("${jwt.expiration}")
-    private long accessTokenExpiration;
+    private String accessTokenExpiration;
 
     @Value("${jwt.refresh-expiration}")
-    private long refreshTokenExpiration;
+    private String refreshTokenExpiration;
 
     private SecretKey key;
 
@@ -52,11 +52,12 @@ public class JwtUtil {
     //토큰 생성
     public String createToken(UUID userId, UserRole userRole) {
         Date date = new Date();
+        long exp = Long.parseLong(accessTokenExpiration);
         return BEARER_PREFIX +
                 Jwts.builder()
                         .subject(String.valueOf(userId))
                         .claim("role", userRole.name())
-                        .expiration(new Date(date.getTime() + accessTokenExpiration * 1000))
+                        .expiration(new Date(date.getTime() + exp * 1000))
                         .issuedAt(date) // 발급일
                         .signWith(key, algorithm) // 암호화 알고리즘
                         .compact();
@@ -99,7 +100,8 @@ public class JwtUtil {
     // 리프레시 토큰 생성
     public String createRefreshToken(UUID userId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + refreshTokenExpiration * 1000);
+        long refreshExp = Long.parseLong(refreshTokenExpiration);
+        Date expiryDate = new Date(now.getTime() + refreshExp * 1000);
         return Jwts.builder()
                 .subject(userId.toString())
                 .issuedAt(now)

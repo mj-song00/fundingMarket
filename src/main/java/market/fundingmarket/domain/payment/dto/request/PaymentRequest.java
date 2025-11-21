@@ -22,4 +22,5 @@ public class PaymentRequest {
     @NotBlank
     private String phoneNumber;
 
+    private long fundingId;
 }
