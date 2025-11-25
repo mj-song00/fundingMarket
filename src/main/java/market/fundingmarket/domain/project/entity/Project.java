@@ -9,7 +9,6 @@ import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -38,7 +37,7 @@ public class Project extends Timestamped {
     private Long fundingAmount; // 펀딩 목표 금액
 
     @Column
-    private int collectedAmount; // 현재 모금액
+    private int collectedAmount = 0; // 현재 모금액
 
     @Column(nullable = false)
     private String fundingSchedule; // 펀딩 일정 (2025. 01.01 - 2025 03.31)

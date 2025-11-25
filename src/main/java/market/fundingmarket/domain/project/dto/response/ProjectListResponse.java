@@ -11,6 +11,7 @@ public class ProjectListResponse {
     private final String contents;
     private final String thumbnailUrl;
     private final Category category;
+    private final int collectedAmount;
 
     public ProjectListResponse(Project project, String thumbnailUrl) {
         this.id = project.getId();
@@ -18,5 +19,6 @@ public class ProjectListResponse {
         this.contents = project.getContents();
         this.thumbnailUrl = thumbnailUrl;
         this.category = project.getCategory();
+        this.collectedAmount = project.getCollectedAmount();
     }
 }
