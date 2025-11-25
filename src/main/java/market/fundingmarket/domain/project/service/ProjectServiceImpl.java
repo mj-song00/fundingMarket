@@ -151,7 +151,7 @@ public class ProjectServiceImpl  implements ProjectService{
     @Override
     public List<ProjectListResponse> findByCategory(Category categoryKey) {
         List<Project> projects = projectRepository.findByCategory(categoryKey);
-        System.out.println(projects);
+
         return projects.stream()
                 .map(project -> {
                     // 썸네일 1개만 가져오기 (없을 수도 있음)
