@@ -3,7 +3,7 @@ const token = localStorage.getItem("token");
 
 async function getProfile(){
     try{
-        const response = await fetch("http://localhost:8080/api/v1/users/auth/me/profile", {
+        const response = await fetch("http://localhost:8080/api/v1/users/me/profile", {
             method:"GET",
             headers: {
                 "Content-Type": "application/json",
