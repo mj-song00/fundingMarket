@@ -71,7 +71,6 @@ public class ProjectController {
     public ResponseEntity<ApiResponse<ProjectResponse>> getProject(
             @PathVariable Long projectId
     ){
-        System.out.println(" ??="+ projectId);
             ProjectResponse result =  projectService.getProject(projectId);
 
             return ResponseEntity.ok(ApiResponse.successWithData(result, ApiResponseEnum.GET_SUCCESS));
