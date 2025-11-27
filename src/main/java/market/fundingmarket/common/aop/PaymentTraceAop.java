@@ -17,6 +17,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -73,8 +74,12 @@ public class PaymentTraceAop {
         String safeIp = request != null ? getIpAddress() : null;
         String safeUserAgent = request != null ? request.getHeader("User-Agent") : null;
 
-        FundingEventType eventType = joinPoint.getSignature().getName().equals("confirmPayment") ?
-                FundingEventType.FUNDING_PAYMENT : FundingEventType.FUNDING_PAYMENT_CANCEL;
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        String methodName = signature.getName();
+
+        FundingEventType eventType = methodName.equals("confirmPayment") ?
+                FundingEventType.FUNDING_PAYMENT :
+                FundingEventType.FUNDING_PAYMENT_CANCEL;
 
         // --- 요청 로그 ---
         EventLog requestLog = new EventLog(
