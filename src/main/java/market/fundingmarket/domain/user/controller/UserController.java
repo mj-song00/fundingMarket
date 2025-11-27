@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "User", description = "인증 API")
 @RestController
-@RequestMapping("/api/v1/users/auth")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
