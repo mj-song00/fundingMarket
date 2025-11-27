@@ -23,13 +23,29 @@ public class Sponsorship extends Timestamped {
     private int amount; // 후원 금액
 
     @Column
-    private LocalDateTime sponsoredAt; // 후원 시점
+    private String sponsoredAt; // 후원 시점
 
     @Column
-    private int quantity; // 선택한 리워드 갯수
+    private int quantity = 1 ; // 선택한 리워드 갯수
 
     @Column
-    private boolean cancelled = false;
+    private boolean isCanceled = false;
+
+    @Column(nullable = false)
+    private String orderId; // 토스 요청 시 사용한 주문 식별자
+
+    @Column(nullable = false)
+    private String paymentKey; // 토스 결제 키
+
+    @Column(nullable = false)
+    private String orderName; // 선택한 리워드명
+
+    @Column(nullable = false)
+    private String method; // 결제 수단
+
+    private String status;
+
+    private LocalDateTime approvedAt; // 승인 일자
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -43,18 +59,31 @@ public class Sponsorship extends Timestamped {
     @JoinColumn(name = "reward_id", nullable = false)
     private Reward reward; // 선택한 리워드
 
-
-    public Sponsorship (int amount, int quantity,
-                        User user, Project project, Reward reward) {
+    public Sponsorship(int amount, String sponsoredAt, int quantity,
+                       boolean isCanceled, String orderId, String paymentKey,
+                       String orderName, String method, String status,
+                       LocalDateTime approvedAt, User user, Project project, Reward reward) {
         this.amount = amount;
-        this.sponsoredAt = LocalDateTime.now();
+        this.sponsoredAt = sponsoredAt;
         this.quantity = quantity;
+        this.isCanceled = isCanceled;
+        this.orderId = orderId;
+        this.paymentKey = paymentKey;
+        this.orderName = orderName;
+        this.method = method;
+        this.status = status;
+        this.approvedAt = approvedAt;
         this.user = user;
         this.project = project;
         this.reward = reward;
     }
 
+
     public void cancel() {
-        this.cancelled = true;
+        this.isCanceled = true;
+    }
+
+    public void updateStatus() {
+        this.status = "canceled";
     }
 }
