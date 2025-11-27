@@ -6,5 +6,4 @@ import lombok.Getter;
 public class CancelRequest {
     private String paymentKey;
     private String canceledReason;
-    private String orderId;
 }

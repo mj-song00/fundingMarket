@@ -3,6 +3,7 @@ package market.fundingmarket.domain.sponsorship.dto.response;
 import lombok.Getter;
 import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.file.entity.File;
+import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.reward.entity.Reward;
 import market.fundingmarket.domain.sponsorship.entity.Sponsorship;
 
@@ -14,13 +15,13 @@ import java.util.UUID;
 public class SponsorResponse {
     private final Long id;
     private final int amount;
-    private final LocalDateTime sponsoredAt;
+    private final String sponsoredAt;
     private final int quantity;
-    private final boolean cancelled;
-    private final String expectedDeliveryDate;
+    private final boolean isCanceled;
     private final CreatorInfo creator;
     private final RewardInfo reward;
     private final List<FileInfo> images;
+    private final ProjectInfo project;
 
 
     @Getter
@@ -56,17 +57,31 @@ public class SponsorResponse {
         }
     }
 
-    public SponsorResponse (Sponsorship sponsor, List<File> thumbnailImage, Reward reward){
+    @Getter
+    public static class ProjectInfo {
+        private final Long id;
+        private final String title;
+        private final String expectedDeliveryDate;
+
+        public ProjectInfo(Project project) {
+            this.id = project.getId();
+            this.title = project.getTitle();
+            this.expectedDeliveryDate = project.getExpectedDeliveryDate();
+        }
+
+    }
+
+    public SponsorResponse(Sponsorship sponsor, List<File> thumbnailImage, Reward reward, Project project) {
         this.id = sponsor.getId();
         this.amount = sponsor.getAmount();
         this.sponsoredAt = sponsor.getSponsoredAt();
         this.quantity = sponsor.getQuantity();
-        this.cancelled = sponsor.isCancelled();
-        this.expectedDeliveryDate = sponsor.getProject().getExpectedDeliveryDate();
+        this.isCanceled = sponsor.isCanceled();
         this.creator = new CreatorInfo(sponsor.getProject().getCreator());
         this.reward = new RewardInfo(reward);
         this.images = thumbnailImage.stream()
                 .map(FileInfo::new)
                 .toList();
+        this.project = new ProjectInfo(project);
     }
 }

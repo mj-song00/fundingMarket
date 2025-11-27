@@ -25,22 +25,6 @@ import java.util.List;
 public class SponsorController {
     private final SponsorService sponsorService;
 
-    /**
-     *
-     * @param authUser
-     * @param checkRewardRequest
-     * @return void
-     */
-    @Operation(summary = "reward 결정", description = "후원할 금액을 선택합니다. 하나만 선택이 가능합니다 ")
-    @PostMapping("check-reward")
-    public ResponseEntity<ApiResponse<Void>> sponsor(
-            @Auth AuthUser authUser,
-            @RequestBody CheckRewardRequest checkRewardRequest
-            ){
-        sponsorService.selectReward(authUser, checkRewardRequest);
-        ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.SELECT_REWARD_SUCCESS);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
 
     // todo : 페이지네이션 적용 해야됨.  장당 10page
 
@@ -56,16 +40,5 @@ public class SponsorController {
     ){
         List<SponsorResponse> result = sponsorService.getList(authUser);
         return ResponseEntity.ok(ApiResponse.successWithData(result, ApiResponseEnum.GET_SUCCESS));
-    }
-
-    @Operation(summary = "후원 취소", description = "후원을 취소합니다. 완료되거나 종료된 프로젝트에는 경우 사용할 수 없습니다.")
-    @PutMapping("/delete/{sponsorId}")
-    public ResponseEntity<ApiResponse<Void>> cancel (
-            @Auth AuthUser authUser,
-            @PathVariable Long sponsorId
-    ){
-        sponsorService.cancel(authUser, sponsorId);
-        ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.FUNDING_CANCEL_SUCCESS);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
