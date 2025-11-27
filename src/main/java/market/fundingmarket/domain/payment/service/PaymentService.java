@@ -210,7 +210,7 @@ public class PaymentService {
 
             // 토스 응답에서 필요한 결과 추출
             String status = json.get("status").asText();  // e.g. CANCELED
-            String canceledAtStr = json.get("canceledAt").asText();
+            String canceledAtStr = json.get("requestedAt").asText();
             LocalDateTime canceledAt = OffsetDateTime.parse(canceledAtStr).toLocalDateTime();
 
             // 7. 주문 상태 변경
@@ -222,7 +222,6 @@ public class PaymentService {
             sponsor.updateStatus();
             // 9. 응답 생성
             return new CanceledResponse(
-                    sponsor.getPaymentKey(),
                     sponsor.getOrderId(),
                     sponsor.getAmount(),
                     status
