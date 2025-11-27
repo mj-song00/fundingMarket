@@ -9,6 +9,7 @@ import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -88,7 +89,11 @@ public class Project extends Timestamped {
     public void calculateEndDate() {
         if (this.fundingSchedule != null && this.fundingSchedule.contains(" - ")) {
             String end = this.fundingSchedule.split(" - ")[1].trim();
-            this.endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+
+            LocalDate endLocalDate = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+
+            // LocalDate → LocalDateTime 변환
+            this.endDate = endLocalDate.atTime(23, 59, 59);
         }
     }
 
