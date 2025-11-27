@@ -21,6 +21,7 @@
     const inputAddress = sessionStorage.getItem("address");
     const inputPhone = sessionStorage.getItem("phone");
     const projectId = sessionStorage.getItem("projectId");
+    const rewardId = sessionStorage.getItem("reward_id")
 
     async function confirm() {
         const requestData = {
@@ -30,6 +31,7 @@
             address: inputAddress,
             phoneNumber: inputPhone,
             fundingId: projectId,
+            rewardId
         };
 
 

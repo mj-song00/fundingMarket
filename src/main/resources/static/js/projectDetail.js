@@ -75,6 +75,7 @@ function renderRewards(rewards) {
         rewardItem.querySelector(".sponsor-btn").addEventListener("click", () => {
             sessionStorage.setItem("product_name", reward.description);
             sessionStorage.setItem("total", reward.price);
+            sessionStorage.setItem("reward_id", reward.id);
 
             window.location.href = "/selectPayment.html";
         });
