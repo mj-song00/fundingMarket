@@ -23,4 +23,8 @@ public class PaymentRequest {
     private String phoneNumber;
 
     private long fundingId;
+
+    private long rewardId;
+
+    private int quantity;
 }
