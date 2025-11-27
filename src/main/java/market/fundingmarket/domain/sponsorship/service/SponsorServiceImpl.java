@@ -28,7 +28,6 @@ import java.util.UUID;
 public class SponsorServiceImpl implements SponsorService {
     private final SponsorRepository sponsorRepository;
     private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
     private final FileRepository fileRepository;
 
     @Override
@@ -67,18 +66,5 @@ public class SponsorServiceImpl implements SponsorService {
         }
 
         return user;
-    }
-
-    private Project validateProject(AuthUser authUser, Long projectId){
-        Project funding = projectRepository.findById(projectId)
-                .orElseThrow(() -> new BaseException(ExceptionEnum.FUNDING_NOT_FOUND));
-
-//        if(!funding.getCreator().getId().equals(authUser.getId())){
-//            throw new BaseException(ExceptionEnum.CREATOR_NOT_FOUND);
-//        }
-
-        if (funding.getDeletedAt() != null) throw new BaseException(ExceptionEnum.FUNDING_NOT_FOUND);
-
-        return funding;
     }
 }
