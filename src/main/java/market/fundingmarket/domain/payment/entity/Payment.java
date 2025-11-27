@@ -24,7 +24,7 @@ public class Payment extends Timestamped {
 
     private String method; // 결제 수단
 
-    private Integer price; // 결제 가격
+    private int price; // 결제 가격
 
     private String status; // 결제 처리 상태
 
