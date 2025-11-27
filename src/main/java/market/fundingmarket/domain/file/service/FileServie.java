@@ -45,7 +45,7 @@ public class FileServie {
         List<String> fileUrls = new ArrayList<>();
 
         String bucket =  s3Config.getBucket();
-        String region = "ap-northeast-2";       // region은 URL 생성용 (config에 하드코딩 되어 있음)
+        String region = "ap-northeast-2";
 
         for (MultipartFile multipartFile : addImages) {
             try {
@@ -79,13 +79,13 @@ public class FileServie {
 //                        : "";
 
                 // DB 저장용 엔티티 생성
-                File fileEntity = new File(
-                        originalFileName,   // 실제 파일명
+                File file = new File(
                         imageUrl,   // S3 URL
+                        originalFileName,   // 실제 파일명
                         project,
                         false
                 );
-                newImages.add(fileEntity);
+                newImages.add(file);
 
             } catch (IOException e) {
                 throw new BaseException(ExceptionEnum.UPLOAD_FAILED);
