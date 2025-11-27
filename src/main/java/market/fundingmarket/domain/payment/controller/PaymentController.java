@@ -14,10 +14,7 @@ import market.fundingmarket.domain.payment.dto.response.PaymentResponse;
 import market.fundingmarket.domain.payment.service.PaymentService;
 import market.fundingmarket.domain.user.dto.AuthUser;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @Tag(name = "Payment", description = "결제 관련 API")
@@ -39,15 +36,14 @@ public class PaymentController {
     }
 
     @Operation(summary= "카드 결제 취소", description = "펀딩을 취소합니다. 기간이 지난 후 취소는 불가능 합니다.")
-    @PostMapping("/canceled")
+    @PostMapping("/orders/{orderId}/canceled")
     public ResponseEntity<ApiResponse<CanceledResponse>> cancel(
             @Auth AuthUser authUser,
-            @RequestBody CancelRequest cancelRequest
+            @RequestBody CancelRequest cancelRequest,
+            @PathVariable Long orderId
     ){
-        CanceledResponse result = paymentService.cancel(authUser, cancelRequest);
+        CanceledResponse result = paymentService.cancel(authUser, cancelRequest, orderId);
         return ResponseEntity.ok(ApiResponse.successWithData(result, ApiResponseEnum.
                 CANCEL_SUCCESS));
     }
-
-
 }
