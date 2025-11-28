@@ -34,7 +34,7 @@ public class Order extends Timestamped {
     @Column
     private LocalDateTime canceledAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sponsorship_id", nullable = false)
     private Sponsorship sponsor;
 

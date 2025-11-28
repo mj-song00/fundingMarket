@@ -49,7 +49,6 @@ public class PaymentService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final RewardRepository rewardRepository;
-    private final PaymentTraceAop paymentTraceAop;
 
     @Transactional
     public PaymentResponse confirmPayment(PaymentRequest paymentRequest, AuthUser authUser) {
