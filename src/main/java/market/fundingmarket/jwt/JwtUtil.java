@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecureDigestAlgorithm;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import market.fundingmarket.domain.user.enums.UserRole;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Slf4j(topic = "JwtUtil")
 @Component
 @NoArgsConstructor
+@Getter
 public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     // 사용자 권한 값의 KEY
