@@ -1,7 +1,9 @@
 package market.fundingmarket.domain.user;
 
 import market.fundingmarket.common.config.PasswordEncoder;
+import market.fundingmarket.common.exception.BaseException;
 import market.fundingmarket.common.repository.RefreshTokenRepository;
+import market.fundingmarket.domain.creator.repository.CreatorRepository;
 import market.fundingmarket.domain.user.dto.AuthUser;
 import market.fundingmarket.domain.user.dto.request.LoginRequest;
 import market.fundingmarket.domain.user.entity.User;
@@ -23,8 +25,7 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +33,9 @@ public class AuthServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private CreatorRepository creatorRepository;
 
     @InjectMocks
     private AuthService authService;
@@ -41,9 +45,6 @@ public class AuthServiceTest {
 
     @InjectMocks
     private JwtUtil jwtUtil;
-
-    @Mock
-    private RedisTemplate<String, Object> redisTemplate;
 
     private User user;
     private AuthUser authUser;
@@ -55,11 +56,17 @@ public class AuthServiceTest {
         passwordEncoder = new PasswordEncoder();
         ReflectionTestUtils.setField(authService, "passwordEncoder", passwordEncoder);
 
-      // JWTUtil 실제 객체 + 테스트용 secretKey 세팅
+        // JWTUtil 실제 객체 + 테스트용 secretKey 세팅
         jwtUtil = new JwtUtil();
         ReflectionTestUtils.setField(jwtUtil, "secretKey",
                 Base64.getEncoder().encodeToString("test-secret-key-01234567890123456789012345678901".getBytes()));
-        ReflectionTestUtils.setField(jwtUtil, "accessTokenExpiration", "3600"); // 1시간
+
+        // AccessToken 만료
+        ReflectionTestUtils.setField(jwtUtil, "accessTokenExpiration", "3600");
+
+        // RefreshToken 만료
+        ReflectionTestUtils.setField(jwtUtil, "refreshTokenExpiration", "604800");
+
         jwtUtil.init();
         ReflectionTestUtils.setField(authService, "jwtUtil", jwtUtil);
 
@@ -92,5 +99,60 @@ public class AuthServiceTest {
         // then
         assertNotNull(accessToken);
         assertTrue(accessToken.startsWith("Bearer "));
+    }
+
+    @Test
+    @DisplayName("accessToken 발급 실패 - 잘못된 email")
+    void fail_invalid_email() {
+        // given
+        LoginRequest loginRequest = new LoginRequest("test@test.com", "Asdf1234!");
+
+        given(userRepository.findByEmail("test@test.com"))
+                .willReturn(Optional.empty());
+
+        given(creatorRepository.findByEmail("test@test.com"))
+                .willReturn(Optional.empty());
+        //when
+        BaseException exception = assertThrows(BaseException.class, () ->
+                authService.login(loginRequest)
+        );
+
+        //then
+        assertEquals("사용자를 찾을 수 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("accessToken 발급 실패 - 잘못된 password")
+    void fail_invalid_password() {
+        // given
+        LoginRequest loginRequest = new LoginRequest(user.getEmail(), "asdf1234!");
+
+        given(userRepository.findByEmail(user.getEmail()))
+                .willReturn(Optional.of(user));
+
+        //when
+        BaseException exception = assertThrows(BaseException.class, () ->
+                authService.login(loginRequest)
+        );
+
+        assertFalse(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()));
+
+        //then
+        assertEquals("이메일 혹은 비밀번호가 일치하지 않습니다.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("RefreshToken 발급 성공")
+    void success_refreshToken() {
+        LoginRequest loginRequest = new LoginRequest(user.getEmail(), "Asdf1234!");
+
+        given(userRepository.findByEmail(user.getEmail()))
+                .willReturn(Optional.of(user));
+
+        // when
+        String refreshToken = authService.generateRefreshToken(loginRequest.getEmail());
+
+        assertNotNull(refreshToken);
+        assertTrue(refreshToken.startsWith("ey"));
     }
 }
