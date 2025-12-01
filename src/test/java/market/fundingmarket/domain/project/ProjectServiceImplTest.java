@@ -1,4 +1,4 @@
-package market.fundingmarket.project;
+package market.fundingmarket.domain.project;
 
 import market.fundingmarket.domain.creator.entity.Creator;
 import market.fundingmarket.domain.creator.repository.CreatorRepository;

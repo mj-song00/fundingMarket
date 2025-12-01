@@ -1,4 +1,4 @@
-package market.fundingmarket.user;
+package market.fundingmarket.domain.user;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
