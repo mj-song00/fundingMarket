@@ -9,6 +9,7 @@ import market.fundingmarket.domain.project.enums.Category;
 import market.fundingmarket.domain.project.enums.FundingStatus;
 import market.fundingmarket.domain.project.repository.ProjectRepository;
 import market.fundingmarket.domain.reward.repository.RewardRepository;
+import market.fundingmarket.domain.sponsorship.repository.SponsorRepository;
 import market.fundingmarket.domain.user.enums.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,6 +51,9 @@ public class BatchJobTest {
     @Autowired
     private FileRepository fileRepository;
 
+    @Autowired
+    private SponsorRepository sponsorRepository;
+
     private final DateTimeFormatter internalDateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private final DateTimeFormatter jobParameterFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -73,6 +77,7 @@ public class BatchJobTest {
     @Commit
     @Transactional
     void setup() {
+        sponsorRepository.deleteAllInBatch();
         rewardRepository.deleteAllInBatch();
         fileRepository.deleteAllInBatch();
         projectRepository.deleteAllInBatch();
@@ -158,7 +163,7 @@ public class BatchJobTest {
         // JobParameter는 Reader에서 @Value("#{jobParameters['now']}")로 LocalDate를 받기 때문에
         // yyyy-MM-dd 형식의 문자열로 전달해야 합니다.
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("now", LocalDate.now().format(jobParameterFormatter)) // 👈 LocalDate를 String으로 변환
+                .addString("now", LocalDate.now().format(jobParameterFormatter)) // LocalDate를 String으로 변환
                 .addLong("run.id", System.currentTimeMillis()) // 중복 실행 방지용
                 .toJobParameters();
 
