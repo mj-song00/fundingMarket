@@ -16,7 +16,8 @@ public enum Category {
     PERFUME("향수"),
     MUSIC("음반"),
     BAG("가방"),
-    BEAUTY("미용");
+    BEAUTY("미용"),
+    ANIME("애니");
 
 
     private final String message;
