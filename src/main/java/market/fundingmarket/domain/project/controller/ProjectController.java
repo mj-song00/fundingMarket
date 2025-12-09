@@ -10,6 +10,7 @@ import market.fundingmarket.common.response.ApiResponse;
 import market.fundingmarket.common.response.ApiResponseEnum;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
+import market.fundingmarket.domain.project.dto.response.MainProjectResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectListResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.enums.Category;
@@ -38,11 +39,11 @@ public class ProjectController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<Void>> register(
-            @Valid @RequestPart  RegistrationRequest registrationRequest,
+            @Valid @RequestPart RegistrationRequest registrationRequest,
             @Auth AuthUser authUser,
             @RequestPart("images") List<MultipartFile> images,
             @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
-            ){
+    ) {
 
         projectService.register(registrationRequest, authUser, images, thumbnail);
 
@@ -60,7 +61,7 @@ public class ProjectController {
             @PathVariable Long fundingId,
             @RequestPart("images") List<MultipartFile> images,
             @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
-    ){
+    ) {
         projectService.update(authUser, updateRequest, fundingId, images, thumbnail);
         ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.UPDATE_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -70,10 +71,10 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public ResponseEntity<ApiResponse<ProjectResponse>> getProject(
             @PathVariable Long projectId
-    ){
-            ProjectResponse result =  projectService.getProject(projectId);
+    ) {
+        ProjectResponse result = projectService.getProject(projectId);
 
-            return ResponseEntity.ok(ApiResponse.successWithData(result, ApiResponseEnum.GET_SUCCESS));
+        return ResponseEntity.ok(ApiResponse.successWithData(result, ApiResponseEnum.GET_SUCCESS));
     }
 
     @Operation(summary = "프로젝트 종료", description = "프로젝트를 종료합니다. 해당 API는 직접 펀딩 종료시에만 사용됩니다.")
@@ -81,16 +82,16 @@ public class ProjectController {
     public ResponseEntity<ApiResponse<Void>> terminationFunding(
             @Auth AuthUser authUser,
             @PathVariable Long fundingId
-    ){
+    ) {
         projectService.termination(authUser, fundingId);
         ApiResponse<Void> response = ApiResponse.successWithOutData(ApiResponseEnum.UPDATE_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-    @Operation(summary ="프로젝트 카테고리 조회", description = "프로젝트에서 사용 가능한 카테고리 목록을 조회합니다.")
+    @Operation(summary = "프로젝트 카테고리 조회", description = "프로젝트에서 사용 가능한 카테고리 목록을 조회합니다.")
     @GetMapping("/category")
-    public  List<Map<String, String>> getCategories() {
+    public List<Map<String, String>> getCategories() {
         return Arrays.stream(Category.values())
                 .map(c -> Map.of(
                         "key", c.name(),          // 서버에서 사용할 값
@@ -104,5 +105,13 @@ public class ProjectController {
     public List<ProjectListResponse> getProjectsByCategory(@PathVariable String categoryKey) {
         Category categoryEnum = Category.valueOf(categoryKey.toUpperCase());
         return projectService.findByCategory(categoryEnum);
+    }
+
+    @Operation(summary = "메인페이지 펀딩 프로젝트 조회", description = "펀딩률이 높거나 마감이 임박한 펀딩 프로젝트들을 조회합니다.")
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<List<MainProjectResponse>>> getProjects(){
+        List<MainProjectResponse> result = projectService.getMainProjects();
+        ApiResponse<List<MainProjectResponse>> apiResponse = ApiResponse.successWithData(result, ApiResponseEnum.GET_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 }

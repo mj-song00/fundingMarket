@@ -3,6 +3,7 @@ package market.fundingmarket.domain.project.service;
 import jakarta.validation.Valid;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
+import market.fundingmarket.domain.project.dto.response.MainProjectResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectListResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.enums.Category;
@@ -21,4 +22,6 @@ public interface ProjectService {
     void termination(AuthUser authUser, Long fundingId);
 
     List<ProjectListResponse> findByCategory(Category categoryKey);
+
+    List<MainProjectResponse> getMainProjects();
 }

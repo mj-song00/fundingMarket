@@ -11,6 +11,7 @@ import market.fundingmarket.domain.file.repository.FileRepository;
 import market.fundingmarket.domain.file.service.FileServie;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
+import market.fundingmarket.domain.project.dto.response.MainProjectResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectListResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.entity.Project;
@@ -32,6 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -162,6 +164,24 @@ public class ProjectServiceImpl  implements ProjectService{
                     return new ProjectListResponse(project, thumbnailUrl);
                 })
                 .toList();
+    }
+
+    @Override
+    public List<MainProjectResponse> getMainProjects() {
+        List<Object[]> results = projectRepository.findTopProjectsByCalculatedRate();
+
+        return results.stream()
+                .map(row -> {
+                    // 쿼리 순서와 매핑되는 인덱스를 사용하여 DTO를 생성합니다.
+                    long id = ((Number) row[0]).longValue();
+                    String title = (String) row[1];
+                    // ... (필요한 컬럼들을 row 배열에서 순서대로 추출)
+                    String thumbnailUrl = (String) row[5];
+
+                    // DTO 생성자로 변환
+                    return new MainProjectResponse(id, title, thumbnailUrl);
+                })
+                .collect(Collectors.toList());
     }
 
 
