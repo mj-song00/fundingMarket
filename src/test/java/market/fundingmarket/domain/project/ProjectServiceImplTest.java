@@ -7,6 +7,7 @@ import market.fundingmarket.domain.file.repository.FileRepository;
 import market.fundingmarket.domain.file.service.FileServie;
 import market.fundingmarket.domain.project.dto.request.RegistrationRequest;
 import market.fundingmarket.domain.project.dto.request.UpdateFundingRequest;
+import market.fundingmarket.domain.project.dto.response.MainProjectResponse;
 import market.fundingmarket.domain.project.dto.response.ProjectResponse;
 import market.fundingmarket.domain.project.entity.Project;
 import market.fundingmarket.domain.project.enums.FundingStatus;
@@ -28,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,8 @@ import java.util.UUID;
 
 import static market.fundingmarket.domain.project.enums.Category.GAME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,6 +68,9 @@ public class ProjectServiceImplTest {
     private Creator creator;
     private AuthUser authUser;
 
+    private List<Object[]> mockRepositoryResults;
+    private List<MainProjectResponse> expectedResponses;
+
     @BeforeEach
     public void setUp(){
 
@@ -79,6 +86,32 @@ public class ProjectServiceImplTest {
             .build();
 
     authUser = new AuthUser(creator.getId(), creator.getEmail(), creator.getUserRole());
+
+        Object[] result1 = new Object[]{
+                1L,                       // row[0]: id
+                "Project Alpha",          // row[1]: title
+                "Description 1",          // row[2]: description (가정)
+                new BigDecimal("4.5"),    // row[3]: calculatedRate (가정)
+                100,                      // row[4]: participantCount (가정)
+                "http://example.com/thumb1.jpg" // row[5]: thumbnailUrl
+        };
+
+        Object[] result2 = new Object[]{
+                2L,                       // row[0]: id
+                "Project Beta",           // row[1]: title
+                "Description 2",          // row[2]: description (가정)
+                new BigDecimal("4.8"),    // row[3]: calculatedRate (가정)
+                50,                       // row[4]: participantCount (가정)
+                "http://example.com/thumb2.jpg" // row[5]: thumbnailUrl
+        };
+
+        mockRepositoryResults = Arrays.asList(result1, result2);
+
+        // 서비스 메서드가 최종적으로 반환해야 할 예상 DTO 리스트
+        expectedResponses = Arrays.asList(
+                new MainProjectResponse(1L, "Project Alpha", "http://example.com/thumb1.jpg"),
+                new MainProjectResponse(2L, "Project Beta", "http://example.com/thumb2.jpg")
+        );
     }
 
     @Test
@@ -284,5 +317,51 @@ public class ProjectServiceImplTest {
         // 상태 검증
         assertThat(savedProject.getStatus()).isEqualTo(FundingStatus.INTERRUPTION);
         assertThat(savedProject.getDeletedAt()).isNotNull();
+    }
+
+    // 메인페이지 조회
+    @Test
+    @DisplayName("메인 프로젝트 목록 조회: Repository 결과가 DTO로 올바르게 변환되어야 한다")
+    void getMainProjects_ShouldReturnCorrectlyMappedDtos() {
+        // given
+        // projectRepository.findTopProjectsByCalculatedRate() 호출 시 목업 데이터 반환 설정
+        when(projectRepository.findTopProjectsByCalculatedRate())
+                .thenReturn(mockRepositoryResults);
+
+        // when
+        List<MainProjectResponse> actualResponses = projectService.getMainProjects();
+
+        // then
+        // 1. 결과가 null이 아니어야 함
+        assertNotNull(actualResponses, "결과 리스트는 null이 아니어야 합니다.");
+
+        // 2. 결과 리스트의 크기가 예상과 일치해야 함
+        assertEquals(expectedResponses.size(), actualResponses.size(), "결과 리스트의 크기가 일치해야 합니다.");
+
+        // 3. 각 DTO의 내용이 예상과 일치해야 함
+        for (int i = 0; i < actualResponses.size(); i++) {
+            MainProjectResponse actual = actualResponses.get(i);
+            MainProjectResponse expected = expectedResponses.get(i);
+
+            assertEquals(expected.getId(), actual.getId(), "DTO의 ID가 일치해야 합니다.");
+            assertEquals(expected.getTitle(), actual.getTitle(), "DTO의 Title이 일치해야 합니다.");
+            assertEquals(expected.getThumbnailUrl(), actual.getThumbnailUrl(), "DTO의 ThumbnailUrl이 일치해야 합니다.");
+        }
+    }
+
+    @Test
+    @DisplayName("메인 프로젝트 목록 조회: Repository가 빈 리스트를 반환할 때 빈 DTO 리스트를 반환해야 한다")
+    void getMainProjects_ShouldReturnEmptyListWhenRepositoryReturnsEmpty() {
+        // givn
+        // projectRepository.findTopProjectsByCalculatedRate() 호출 시 빈 리스트 반환 설정
+        when(projectRepository.findTopProjectsByCalculatedRate())
+                .thenReturn(List.of()); // 또는 Collections.emptyList()
+
+        // when
+        List<MainProjectResponse> actualResponses = projectService.getMainProjects();
+
+        // then
+        assertNotNull(actualResponses, "결과 리스트는 null이 아니어야 합니다.");
+        assertEquals(0, actualResponses.size(), "빈 리스트를 반환해야 합니다.");
     }
 }
