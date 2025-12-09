@@ -63,7 +63,7 @@ public class JwtFilter  implements Filter {
         if (path.startsWith("/api/v1/users/auth/sign-up") || path.startsWith("/api/v1/users/auth/sign-in")
                 || path.startsWith("/api/v1/creator/sign-up")   || path.startsWith("/api/v1/users/sign-up")
                 ||path.matches("^/api/v1/project/\\d+/?(\\?.*)?$")
-                || path.startsWith("/api/v1/project/category")
+                || path.startsWith("/api/v1/project/category") || path.startsWith("/api/v1/project")
                 ||SWAGGER_WHITELIST.stream().anyMatch(path::startsWith)
         ) {
             chain.doFilter(httpRequest, httpResponse);
