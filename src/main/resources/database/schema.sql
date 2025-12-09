@@ -6,7 +6,7 @@ USE market;
 -- User 테이블
 CREATE TABLE users
 (
-    id         VARCHAR(36)              NOT NULL,
+    id         VARCHAR(16)              NOT NULL,
     created_at DATETIME(6),
     updated_at DATETIME(6),
     deleted_at DATETIME(6),
@@ -20,7 +20,7 @@ CREATE TABLE users
 -- Creator 테이블
 CREATE TABLE creator
 (
-    id           VARCHAR(36)              NOT NULL,
+    id           VARCHAR(16)              NOT NULL,
     created_at   DATETIME(6),
     updated_at   DATETIME(6),
     deleted_at   DATETIME(6),
@@ -39,7 +39,7 @@ CREATE TABLE creator
 CREATE TABLE orders
 (
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id      VARCHAR(36)  NOT NULL,
+    user_id      VARCHAR(16)  NOT NULL,
     order_id     VARCHAR(255) NOT NULL,             -- 토스 주문 식별자
     payment_key  VARCHAR(255) NOT NULL,             -- 토스 결제 키
     order_name   VARCHAR(255) NOT NULL,             -- 결제한 프로젝트명
@@ -60,7 +60,7 @@ CREATE TABLE orders
 CREATE TABLE payment
 (
     payment_key  VARCHAR(255) NOT NULL, -- PK
-    user_id      VARCHAR(36),           -- 결제한 유저 (UUID)
+    user_id      VARCHAR(16),           -- 결제한 유저 (UUID)
     order_name   VARCHAR(255),          -- 결제 이름
     method       VARCHAR(50),           -- 결제 수단
     price        INT,                   -- 결제 가격
@@ -88,7 +88,7 @@ CREATE TABLE project
     status                 VARCHAR(50)  NOT NULL, -- Enum FundingStatusㅇ
     expected_delivery_date VARCHAR(255),          -- 배송 예상일
     deleted_at             DATETIME,              -- 삭제 일자
-    creator_id             VARCHAR(36),           -- Creator FK
+    creator_id             VARCHAR(16),           -- Creator FK
     end_date               VARCHAR(255),
     created_at             DATETIME(6),
     updated_at             DATETIME(6),
@@ -140,7 +140,7 @@ CREATE TABLE sponsorship
     status        VARCHAR(255),                      -- 결제 상태 (Entity: status)
     approved_at   DATETIME(6),                       -- 승인 일자 (Entity: LocalDateTime)
 
-    user_id       VARCHAR(36) NOT NULL,              -- 후원자 (User FK)
+    user_id       VARCHAR(16) NOT NULL,              -- 후원자 (User FK)
     project_id    BIGINT NOT NULL,                   -- 후원한 프로젝트 (Project FK)
     reward_id     BIGINT NOT NULL,                   -- 선택한 리워드 (Reward FK)
 
