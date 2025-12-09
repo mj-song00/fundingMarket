@@ -21,7 +21,7 @@ import java.util.UUID;
 public class Creator extends Timestamped  implements Authenticatable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column
+    @Column(columnDefinition = "BINARY(16)", nullable = false)
     private UUID id;
 
     @Column
